@@ -268,7 +268,6 @@ rsome==1.2.1
 ruamel.yaml @ file:///home/conda/feedstock_root/build_artifacts/ruamel.yaml_1678272977710/work
 ruamel.yaml.clib @ file:///home/conda/feedstock_root/build_artifacts/ruamel.yaml.clib_1670412719074/work
 scikit-cuda==0.5.3
-scikit-image @ file:///home/conda/feedstock_root/build_artifacts/scikit-image_1681313146947/work/dist/scikit_image-0.20.0-cp310-cp310-linux_x86_64.whl
 scikit-learn==1.0.2
 scipy==1.10.1
 seaborn @ file:///home/conda/feedstock_root/build_artifacts/seaborn-split_1672497695270/work
