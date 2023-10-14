@@ -1,7 +1,6 @@
 CityLearn==2.1b9
 numpy
 tqdm
-lightgbm
 absl-py==2.0.0
 aicrowd-cli==0.1.15
 aiofiles @ file:///home/conda/feedstock_root/build_artifacts/aiofiles_1664378549280/work
