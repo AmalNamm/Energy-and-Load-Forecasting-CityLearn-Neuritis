@@ -80,15 +80,11 @@ def evaluate(config):
     try:
         observations = env.reset()
         for _ in tqdm(range(env.time_steps)):
-            
-            ### This is only a reference script provided to allow you 
-            ### to do local evaluation. The evaluator **DOES NOT** 
-            ### use this script for orchestrating the evaluations. 
-
+            print('************************************')
+            print(str(_))
             step_start = time.perf_counter()
             forecasts_dict = model.compute_forecast(observations)
             model_time_elapsed += time.perf_counter()- step_start
-
 
             # Perform logging.
             # ========================================================================
@@ -172,7 +168,5 @@ if __name__ == '__main__':
     class Config:
         data_dir = './data/'
         SCHEMA = os.path.join(data_dir, 'schemas/warm_up/schema.json')
-    
     config = Config()
-
     evaluate(config)

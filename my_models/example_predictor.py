@@ -16,13 +16,45 @@ This class must have the following methods:
 You may wish to implement additional methods to make your model code neater.
 """
 
-import numpy as np
+import os
+import glob
+import numpy as np 
+import pandas as pd 
+import lightgbm as lgb
+from sklearn.model_selection import GroupKFold
+import category_encoders as ce
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
+
+from lightgbm import LGBMRegressor
+from skforecast.ForecasterAutoreg import ForecasterAutoreg
+from skforecast.ForecasterAutoregDirect import ForecasterAutoregDirect
+from skforecast.model_selection import grid_search_forecaster
+from skforecast.model_selection import backtesting_forecaster
+from sklearn.metrics import mean_pinball_loss
+
+from sklearn.model_selection import train_test_split
+import matplotlib.ticker as ticker
+from tslearn.utils import to_time_series_dataset
+from tslearn.clustering import TimeSeriesKMeans
+import re
 
 from my_models.base_predictor_model import BasePredictorModel
 
 
 class ExamplePredictor(BasePredictorModel):
 
+    
+    def shape(lst):
+        length = len(lst)
+        shp = tuple(shape(sub) if isinstance(sub, list) else 0 for sub in lst)
+        if any(x != 0 for x in shp):
+            return length, shp
+        else:
+            return length
+        
+        
     def __init__(self, env_data, tau):
         """Initialise Prediction object and perform setup.
         
@@ -59,7 +91,6 @@ class ExamplePredictor(BasePredictorModel):
         self.buffer = {'key': []}
         # ====================================================================
         print("=========================Available Observations=========================")
-        print(self.observation_names) # available observations
 
         # dummy forecaster buffer - delete for your implementation
         # ====================================================================
@@ -75,9 +106,23 @@ class ExamplePredictor(BasePredictorModel):
         self.b0_pv_capacity = env_data['b0_pv_capacity']
         # ====================================================================
 
+    # Here I have to load the Prediction Model!
     def load(self):
-        """No loading required for trivial example model."""
-        pass
+        
+        self.model_dhw_b1 = lgb.Booster(model_file='my_models/models/dhw_load_model_b1.txt')
+        self.model_dhw_b2 = lgb.Booster(model_file='my_models/models/dhw_load_model_b2.txt')
+        self.model_dhw_b3 = lgb.Booster(model_file='my_models/models/dhw_load_model_b3.txt')
+        self.model_sg_b1  = lgb.Booster(model_file='my_models/models/solar_generation_model_b1.txt')
+        self.model_sg_b2  = lgb.Booster(model_file='my_models/models/solar_generation_model_b2.txt')
+        self.model_sg_b3  = lgb.Booster(model_file='my_models/models/solar_generation_model_b3.txt')
+        self.model_eep_b1 = lgb.Booster(model_file='my_models/models/Equipment_Electric_Power_model_b1.txt')
+        self.model_eep_b2 = lgb.Booster(model_file='my_models/models/Equipment_Electric_Power_model_b2.txt')
+        self.model_eep_b3 = lgb.Booster(model_file='my_models/models/Equipment_Electric_Power_model_b3.txt')
+        self.model_cl_b1  = lgb.Booster(model_file='my_models/models/cooling_load_model_b1.txt')
+        self.model_cl_b2  = lgb.Booster(model_file='my_models/models/cooling_load_model_b1.txt')
+        self.model_cl_b3  = lgb.Booster(model_file='my_models/models/cooling_load_model_b1.txt')
+        self.model_cip    = lgb.Booster(model_file='my_models/models/Carbon_Intensity_Power_model.txt')
+
 
     def compute_forecast(self, observations):
         """Compute forecasts for each variable given current observation.
@@ -106,24 +151,92 @@ class ExamplePredictor(BasePredictorModel):
         # ====================================================================
         # insert your forecasting code here
         # ====================================================================
+        
+        
+        # Take all the input features        
+        
+        # Results
+        dhw_1_p = []
+        sg_1_p  = []
+        eep_1_p = []
+        cl_1_p  = []
+        
+        dhw_2_p = []
+        sg_2_p  = []
+        eep_2_p = []
+        cl_2_p  = []
+        
+        dhw_3_p = []
+        sg_3_p  = []
+        eep_3_p = []
+        cl_3_p  = []
+        
+        
+        
+        
+        # 1. Housing Level
+        for i,b_name in enumerate(self.building_names):
+            
+            v_list = []
+            f_list = []
+            for obs in self.observation_names:
+                for obss in obs: 
+                    tmp = (np.array(observations)[0][np.where(np.array(self.observation_names)[0] == obss)[0][0]])
+                    v_list.append(tmp)
+                    f_list.append(obss)
+
+            
+            df = pd.DataFrame(columns=f_list)
+            i = 0
+            for (columnName, columnData) in df.iteritems():
+                df.at[0, columnName] = v_list[i]
+                i = i + 1
+            df = df.astype(float)
+       
+
+            if b_name == 'Building_1':
+                dhw_1_p = self.model_dhw_b1.predict(df,predict_disable_shape_check=True)
+                sg_1_p  = self.model_sg_b1.predict(df,predict_disable_shape_check=True)
+                eep_1_p = self.model_eep_b1.predict(df,predict_disable_shape_check=True)
+                cl_1_p  = self.model_cl_b1.predict(df,predict_disable_shape_check=True)
+       
+            if b_name == 'Building_2':
+                dhw_2_p = self.model_dhw_b2.predict(df,predict_disable_shape_check=True)
+                sg_2_p  = self.model_sg_b2.predict(df,predict_disable_shape_check=True)
+                eep_2_p = self.model_eep_b2.predict(df,predict_disable_shape_check=True)
+                cl_2_p  = self.model_cl_b2.predict(df,predict_disable_shape_check=True)
+                
+            if b_name == 'Building_3':
+                dhw_3_p = self.model_dhw_b3.predict(df,predict_disable_shape_check=True)
+                sg_3_p  = self.model_sg_b3.predict(df,predict_disable_shape_check=True)
+                eep_3_p = self.model_eep_b3.predict(df,predict_disable_shape_check=True)
+                cl_3_p  = self.model_cl_b3.predict(df,predict_disable_shape_check=True)
+
+        
+        sg_total = sg_1_p + sg_2_p + sg_3_p
+        cip_p  = self.model_cip.predict(df,predict_disable_shape_check=True)
 
         # dummy forecaster for illustration - delete for your implementation
         # ====================================================================
         # NOTE: this observation parsing only works of central agent setups
         # which is the case for the default schema provided.
         # View observations formatting via CityLearnEnv.observation_names
+        
+        
         current_vals = {
             **{b_name: {
-                'Equipment_Eletric_Power': np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'non_shiftable_load')[0][i]],
+                'Equipment_Eletric_Power': 
+                 np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'non_shiftable_load')[0][i]],
+                
                 'DHW_Heating': np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'dhw_demand')[0][i]],
+                
                 'Cooling_Load': np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'cooling_demand')[0][i]]
                 } for i,b_name in enumerate(self.building_names)},
-            'Solar_Generation': np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'solar_generation')[0][0]]/self.b0_pv_capacity*1000,
-            # Note: the `solar_generation` observations are the kWh produced by the panels on each building in the preceeding hour.
-            # As we want to predict the normalised solar generation [W/kW] common to all buildings, we back-calculate this value using the
-            # first building; normalised solar generation [W/kW] = (building solar generation [kWh] / (building solar capacity [kW] * 1hr)) * 1000
+            'Solar_Generation': 
+        np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'solar_generation')[0][0]]/self.b0_pv_capacity*1000,
             'Carbon_Intensity': np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'carbon_intensity')[0][0]]
         }
+        
 
         if self.prev_vals['Carbon_Intensity'] is None:
             predictions_dict = {
@@ -142,11 +255,35 @@ class ExamplePredictor(BasePredictorModel):
 
             for b_name in self.building_names:
                 predictions_dict[b_name] = {}
+                
                 for load_type in ['Equipment_Eletric_Power','DHW_Heating','Cooling_Load']:
-                    predictions_dict[b_name][load_type] = np.poly1d(np.polyfit([-1,0],[self.prev_vals[b_name][load_type],current_vals[b_name][load_type]],deg=1))(predict_inds)
+                    
+                    if load_type == 'Equipment_Eletric_Power':
+                        if b_name == 'Building_1':
+                            predictions_dict[b_name][load_type] = eep_1_p
+                        if b_name == 'Building_2':
+                            predictions_dict[b_name][load_type] = eep_2_p
+                        if b_name == 'Building_3':
+                            predictions_dict[b_name][load_type] = eep_3_p
+                            
+                    if load_type == 'DHW_Heating':
+                        if b_name == 'Building_1':
+                            predictions_dict[b_name][load_type] = dhw_1_p
+                        if b_name == 'Building_2':
+                            predictions_dict[b_name][load_type] = dhw_2_p
+                        if b_name == 'Building_3':
+                            predictions_dict[b_name][load_type] = dhw_3_p
+                            
+                    if load_type == 'Cooling_Load':
+                        if b_name == 'Building_1':
+                            predictions_dict[b_name][load_type] = cl_1_p
+                        if b_name == 'Building_2':
+                            predictions_dict[b_name][load_type] = cl_2_p
+                        if b_name == 'Building_3':
+                            predictions_dict[b_name][load_type] = cl_3_p                          
 
-            predictions_dict['Solar_Generation'] = np.poly1d(np.polyfit([-1,0],[self.prev_vals['Solar_Generation'],current_vals['Solar_Generation']],deg=1))(predict_inds)
-            predictions_dict['Carbon_Intensity'] = np.poly1d(np.polyfit([-1,0],[self.prev_vals['Carbon_Intensity'],current_vals['Carbon_Intensity']],deg=1))(predict_inds)
+            predictions_dict['Solar_Generation'] = sg_total
+            predictions_dict['Carbon_Intensity'] = cip_p
 
         self.prev_vals = current_vals
         # ====================================================================
