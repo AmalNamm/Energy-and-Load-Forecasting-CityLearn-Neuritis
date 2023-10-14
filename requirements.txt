@@ -1,3 +1,6 @@
 CityLearn==2.1b9
 numpy
 tqdm
+lightgbm
+sklearn
+tslearn

@@ -155,7 +155,7 @@ class ExamplePredictor(BasePredictorModel):
         
         # Take all the input features        
         
-        # Results
+        # Result
         dhw_1_p = []
         sg_1_p  = []
         eep_1_p = []
@@ -289,3 +289,8 @@ class ExamplePredictor(BasePredictorModel):
         # ====================================================================
 
         return predictions_dict
+    
+    
+    
+    
+    
