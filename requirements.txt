@@ -1,7 +1,6 @@
 CityLearn==2.1b9
 numpy
 tqdm
-lightgbmabsl-py==2.0.0
 aiofiles @ file:///home/conda/feedstock_root/build_artifacts/aiofiles_1664378549280/work
 aiosqlite @ file:///home/conda/feedstock_root/build_artifacts/aiosqlite_1671461885930/work
 alembic @ file:///home/conda/feedstock_root/build_artifacts/alembic_1680767280953/work
