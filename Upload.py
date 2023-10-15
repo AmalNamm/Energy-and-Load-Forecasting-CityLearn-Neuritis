@@ -9,3 +9,5 @@ git commit -am "Update"
 git tag -am "submission-v0.7" submission-v0.7
 git push aicrowd master
 git push aicrowd submission-v0.7
+
+lightgbm==4.1.0
