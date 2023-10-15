@@ -1,4 +1,4 @@
-pip
 CityLearn==2.1b9
 numpy
+pip
 lightgbm==4.1.0
