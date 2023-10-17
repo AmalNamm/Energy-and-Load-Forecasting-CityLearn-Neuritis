@@ -69,7 +69,6 @@ def evaluate(config):
 
     model = SubmissionModel(env_data=env_data, tau=tau)
 
-
     model_time_elapsed = 0
 
     num_steps = 0
@@ -80,8 +79,6 @@ def evaluate(config):
     try:
         observations = env.reset()
         for _ in tqdm(range(env.time_steps)):
-            print('************************************')
-            print(str(_))
             step_start = time.perf_counter()
             forecasts_dict = model.compute_forecast(observations)
             model_time_elapsed += time.perf_counter()- step_start

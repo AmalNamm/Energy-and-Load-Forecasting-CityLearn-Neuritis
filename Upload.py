@@ -10,4 +10,10 @@ git tag -am "submission-v0.7" submission-v0.7
 git push aicrowd master
 git push aicrowd submission-v0.7
 
-lightgbm==4.1.0
+aicrowd-repo2docker \
+        --no-run \
+        --user-id 1001 \
+        --user-name phil_aupke \
+        --image-name sample_aicrowd_image_build \
+        --debug \
+        .

@@ -160,10 +160,5 @@ class XGBoost(BasePredictorModel):
 
         self.prev_vals = current_vals
         # ====================================================================
-        print("Current Valllssss: ")
-        print(current_vals)
-        print("-------------------------------------")
-        print("Predictions Vallllssss: ")
-        print(predictions_dict)
         
         return predictions_dict

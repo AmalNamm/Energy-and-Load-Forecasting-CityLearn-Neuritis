@@ -28,16 +28,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 
 from lightgbm import LGBMRegressor
-from skforecast.ForecasterAutoreg import ForecasterAutoreg
-from skforecast.ForecasterAutoregDirect import ForecasterAutoregDirect
-from skforecast.model_selection import grid_search_forecaster
-from skforecast.model_selection import backtesting_forecaster
 from sklearn.metrics import mean_pinball_loss
 
 from sklearn.model_selection import train_test_split
 import matplotlib.ticker as ticker
-from tslearn.utils import to_time_series_dataset
-from tslearn.clustering import TimeSeriesKMeans
 import re
 
 from my_models.base_predictor_model import BasePredictorModel
