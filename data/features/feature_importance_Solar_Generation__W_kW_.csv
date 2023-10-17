@@ -1,0 +1,28 @@
+,feature,score
+0,Solar Generation (W/kW),3.399175633479462
+1,Hour,1.4835726064951573
+2,Diffuse Solar Radiation (W/m2),1.0631066564244325
+3,Direct Solar Radiation (W/m2),1.0483487608554896
+4,24h Diffuse Solar Radiation (W/m2),0.8911665254284391
+5,Equipment Electric Power (kWh),0.8573977813858389
+6,12h Diffuse Solar Radiation (W/m2),0.8271032121987387
+7,12h Direct Solar Radiation (W/m2),0.7515082190107956
+8,24h Direct Solar Radiation (W/m2),0.7418443389855325
+9,Outdoor Drybulb Temperature (C),0.6975366931584057
+10,Outdoor Relative Humidity (%),0.5702218031641619
+11,12h Outdoor Drybulb Temperature (C),0.5660866075860413
+12,24h Outdoor Drybulb Temperature (C),0.5439722868785033
+13,6h Outdoor Drybulb Temperature (C),0.3947117002113476
+14,Occupant Count (people),0.3037002151006898
+15,12h Outdoor Relative Humidity (%),0.29555785078671803
+16,Cooling Load (kWh),0.28632396445131914
+17,6h Outdoor Relative Humidity (%),0.27392624235439555
+18,24h Outdoor Relative Humidity (%),0.2638903687521825
+19,12h Prediction Electricity Pricing _$/kWh_,0.2478058727375183
+20,Electricity Pricing _$/kWh_,0.23527111929573774
+21,6h Prediction Electricity Pricing _$/kWh_,0.21513832877564587
+22,24h Prediction Electricity Pricing _$/kWh_,0.2055420629343918
+23,6h Diffuse Solar Radiation (W/m2),0.16663088726184494
+24,Average Unmet Cooling Setpoint Difference (C),0.1332833960715054
+25,kg_CO2/kWh,0.1308437834048295
+26,Indoor Temperature (C),0.12393610136650057
