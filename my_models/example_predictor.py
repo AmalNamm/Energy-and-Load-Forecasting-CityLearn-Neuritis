@@ -165,126 +165,290 @@ class ExamplePredictor(BasePredictorModel):
         eep_3_p = []
         cl_3_p  = []
         
+        dhw_4_p = []
+        sg_4_p  = []
+        eep_4_p = []
+        cl_4_p  = []
+        
+        dhw_5_p = []
+        sg_5_p  = []
+        eep_5_p = []
+        cl_5_p  = []
+        
+        dhw_6_p = []
+        sg_6_p  = []
+        eep_6_p = []
+        cl_6_p  = []
         
         
+        ### ENV Setting
+        env = 'local'
         
-        # 1. Housing Level
-        print("Making the Housing Level Predictions")
-        for i,b_name in enumerate(self.building_names):
+        if env == 'local':
+            print("Im working locally!")
+        if env == 'online':
+            print("Im working online!")
+        
+        if env == 'local': 
+            # 1. Housing Level
+            for i,b_name in enumerate(self.building_names):
             
-            v_list = []
-            f_list = []
-            for obs in self.observation_names:
-                for obss in obs: 
-                    tmp = (np.array(observations)[0][np.where(np.array(self.observation_names)[0] == obss)[0][0]])
-                    v_list.append(tmp)
-                    f_list.append(obss)
+                v_list = []
+                f_list = []
+                for obs in self.observation_names:
+                    for obss in obs: 
+                        tmp = (np.array(observations)[0][np.where(np.array(self.observation_names)[0] == obss)[0][0]])
+                        v_list.append(tmp)
+                        f_list.append(obss)
 
             
-            df = pd.DataFrame(columns=f_list)
-            i = 0
-            for (columnName, columnData) in df.iteritems():
-                df.at[0, columnName] = v_list[i]
-                i = i + 1
-            df = df.astype(float)
+                df = pd.DataFrame(columns=f_list)
+                i = 0
+                for (columnName, columnData) in df.iteritems():
+                    df.at[0, columnName] = v_list[i]
+                    i = i + 1
+                df = df.astype(float)
        
 
-            if b_name == 'Building_1':
-                dhw_1_p = self.model_dhw_b1.predict(df,predict_disable_shape_check=True)
-                sg_1_p  = self.model_sg_b1.predict(df,predict_disable_shape_check=True)
-                eep_1_p = self.model_eep_b1.predict(df,predict_disable_shape_check=True)
-                cl_1_p  = self.model_cl_b1.predict(df,predict_disable_shape_check=True)
+                if b_name == 'Building_1':
+                    dhw_1_p = self.model_dhw_b1.predict(df,predict_disable_shape_check=True)
+                    sg_1_p  = self.model_sg_b1.predict(df,predict_disable_shape_check=True)
+                    eep_1_p = self.model_eep_b1.predict(df,predict_disable_shape_check=True)
+                    cl_1_p  = self.model_cl_b1.predict(df,predict_disable_shape_check=True)
        
-            if b_name == 'Building_2':
-                dhw_2_p = self.model_dhw_b2.predict(df,predict_disable_shape_check=True)
-                sg_2_p  = self.model_sg_b2.predict(df,predict_disable_shape_check=True)
-                eep_2_p = self.model_eep_b2.predict(df,predict_disable_shape_check=True)
-                cl_2_p  = self.model_cl_b2.predict(df,predict_disable_shape_check=True)
+                if b_name == 'Building_2':
+                    dhw_2_p = self.model_dhw_b2.predict(df,predict_disable_shape_check=True)
+                    sg_2_p  = self.model_sg_b2.predict(df,predict_disable_shape_check=True)
+                    eep_2_p = self.model_eep_b2.predict(df,predict_disable_shape_check=True)
+                    cl_2_p  = self.model_cl_b2.predict(df,predict_disable_shape_check=True)
                 
-            if b_name == 'Building_3':
-                dhw_3_p = self.model_dhw_b3.predict(df,predict_disable_shape_check=True)
-                sg_3_p  = self.model_sg_b3.predict(df,predict_disable_shape_check=True)
-                eep_3_p = self.model_eep_b3.predict(df,predict_disable_shape_check=True)
-                cl_3_p  = self.model_cl_b3.predict(df,predict_disable_shape_check=True)
+                if b_name == 'Building_3':
+                    dhw_3_p = self.model_dhw_b3.predict(df,predict_disable_shape_check=True)
+                    sg_3_p  = self.model_sg_b3.predict(df,predict_disable_shape_check=True)
+                    eep_3_p = self.model_eep_b3.predict(df,predict_disable_shape_check=True)
+                    cl_3_p  = self.model_cl_b3.predict(df,predict_disable_shape_check=True)
 
                 
-        # 2. Neighbourhood Level
-        print("Making the Neighbourhood Level Predictions")
-        sg_total = sg_1_p + sg_2_p + sg_3_p
-        cip_p  = self.model_cip.predict(df,predict_disable_shape_check=True)
+            # 2. Neighbourhood Level
+            sg_total = sg_1_p + sg_2_p + sg_3_p
+            cip_p  = self.model_cip.predict(df,predict_disable_shape_check=True)
 
-        # dummy forecaster for illustration - delete for your implementation
-        # ====================================================================
-        # NOTE: this observation parsing only works of central agent setups
-        # which is the case for the default schema provided.
-        # View observations formatting via CityLearnEnv.observation_names
         
-        
-        current_vals = {
-            **{b_name: {
-                'Equipment_Eletric_Power': 
+            print("Setting the current Values")
+            current_vals = {
+                **{b_name: {
+                    'Equipment_Eletric_Power': 
                  np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'non_shiftable_load')[0][i]],
                 
-                'DHW_Heating': np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'dhw_demand')[0][i]],
+                    'DHW_Heating': np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'dhw_demand')[0][i]],
                 
-                'Cooling_Load': np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'cooling_demand')[0][i]]
-                } for i,b_name in enumerate(self.building_names)},
-            'Solar_Generation': 
-        np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'solar_generation')[0][0]]/self.b0_pv_capacity*1000,
-            'Carbon_Intensity': np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'carbon_intensity')[0][0]]
-        }
+                    'Cooling_Load': np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'cooling_demand')[0][i]]
+                    } for i,b_name in enumerate(self.building_names)},
+                'Solar_Generation': 
+            np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'solar_generation')[0][0]]/self.b0_pv_capacity*1000,
+                'Carbon_Intensity': np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'carbon_intensity')[0][0]]
+            }
         
 
-        if self.prev_vals['Carbon_Intensity'] is None:
-            predictions_dict = {
-                **{b_name: {
-                    'Equipment_Eletric_Power': [current_vals[b_name]['Equipment_Eletric_Power'] for _ in range(self.tau)],
-                    'DHW_Heating': [current_vals[b_name]['DHW_Heating'] for _ in range(self.tau)],
-                    'Cooling_Load': [current_vals[b_name]['Cooling_Load'] for _ in range(self.tau)]
-                    } for i,b_name in enumerate(self.building_names)},
-                'Solar_Generation': [current_vals['Solar_Generation'] for _ in range(self.tau)],
-                'Carbon_Intensity': [current_vals['Carbon_Intensity'] for _ in range(self.tau)]
-            }
+            print("Setting the Predictions")
+            if self.prev_vals['Carbon_Intensity'] is None:
+                predictions_dict = {
+                    **{b_name: {
+                        'Equipment_Eletric_Power': [current_vals[b_name]['Equipment_Eletric_Power'] for _ in range(self.tau)],
+                        'DHW_Heating': [current_vals[b_name]['DHW_Heating'] for _ in range(self.tau)],
+                        'Cooling_Load': [current_vals[b_name]['Cooling_Load'] for _ in range(self.tau)]
+                        } for i,b_name in enumerate(self.building_names)},
+                    'Solar_Generation': [current_vals['Solar_Generation'] for _ in range(self.tau)],
+                    'Carbon_Intensity': [current_vals['Carbon_Intensity'] for _ in range(self.tau)]
+                }
 
-        else:
-            predictions_dict = {}
-            predict_inds = [t+1 for t in range(self.tau)]
+            else:
+                predictions_dict = {}
+                predict_inds = [t+1 for t in range(self.tau)]
 
-            for b_name in self.building_names:
-                predictions_dict[b_name] = {}
+                for b_name in self.building_names:
+                    predictions_dict[b_name] = {}
                 
-                for load_type in ['Equipment_Eletric_Power','DHW_Heating','Cooling_Load']:
+                    for load_type in ['Equipment_Eletric_Power','DHW_Heating','Cooling_Load']:
                     
-                    if load_type == 'Equipment_Eletric_Power':
-                        if b_name == 'Building_1':
-                            predictions_dict[b_name][load_type] = eep_1_p
-                        if b_name == 'Building_2':
-                            predictions_dict[b_name][load_type] = eep_2_p
-                        if b_name == 'Building_3':
-                            predictions_dict[b_name][load_type] = eep_3_p
+                        if load_type == 'Equipment_Eletric_Power':
+                            if b_name == 'Building_1':
+                                predictions_dict[b_name][load_type] = eep_1_p
+                            if b_name == 'Building_2':
+                                predictions_dict[b_name][load_type] = eep_2_p
+                            if b_name == 'Building_3':
+                                predictions_dict[b_name][load_type] = eep_3_p
                             
-                    if load_type == 'DHW_Heating':
-                        if b_name == 'Building_1':
-                            predictions_dict[b_name][load_type] = dhw_1_p
-                        if b_name == 'Building_2':
-                            predictions_dict[b_name][load_type] = dhw_2_p
-                        if b_name == 'Building_3':
-                            predictions_dict[b_name][load_type] = dhw_3_p
+                        if load_type == 'DHW_Heating':
+                            if b_name == 'Building_1':
+                                predictions_dict[b_name][load_type] = dhw_1_p
+                            if b_name == 'Building_2':
+                                predictions_dict[b_name][load_type] = dhw_2_p
+                            if b_name == 'Building_3':
+                                predictions_dict[b_name][load_type] = dhw_3_p
                             
-                    if load_type == 'Cooling_Load':
-                        if b_name == 'Building_1':
-                            predictions_dict[b_name][load_type] = cl_1_p
-                        if b_name == 'Building_2':
-                            predictions_dict[b_name][load_type] = cl_2_p
-                        if b_name == 'Building_3':
-                            predictions_dict[b_name][load_type] = cl_3_p                          
+                        if load_type == 'Cooling_Load':
+                            if b_name == 'Building_1':
+                                predictions_dict[b_name][load_type] = cl_1_p
+                            if b_name == 'Building_2':
+                                predictions_dict[b_name][load_type] = cl_2_p
+                            if b_name == 'Building_3':
+                                predictions_dict[b_name][load_type] = cl_3_p                          
 
-            predictions_dict['Solar_Generation'] = sg_total
-            predictions_dict['Carbon_Intensity'] = cip_p
+                predictions_dict['Solar_Generation'] = sg_total
+                predictions_dict['Carbon_Intensity'] = cip_p
 
-        self.prev_vals = current_vals
-        # ====================================================================
+            self.prev_vals = current_vals
+            # ====================================================================
+            print("Done Prediction!")
+            
+        if env == 'online': 
+            # 1. Housing Level
+            for i,b_name in enumerate(self.building_names):
+            
+                v_list = []
+                f_list = []
+                for obs in self.observation_names:
+                    for obss in obs: 
+                        tmp = (np.array(observations)[0][np.where(np.array(self.observation_names)[0] == obss)[0][0]])
+                        v_list.append(tmp)
+                        f_list.append(obss)
 
+            
+                df = pd.DataFrame(columns=f_list)
+                i = 0
+                for (columnName, columnData) in df.iteritems():
+                    df.at[0, columnName] = v_list[i]
+                    i = i + 1
+                df = df.astype(float)
+    
+                if b_name == 'Building_1':
+                    dhw_1_p = self.model_dhw_b1.predict(df,predict_disable_shape_check=True)
+                    sg_1_p  = self.model_sg_b1.predict(df,predict_disable_shape_check=True)
+                    eep_1_p = self.model_eep_b1.predict(df,predict_disable_shape_check=True)
+                    cl_1_p  = self.model_cl_b1.predict(df,predict_disable_shape_check=True)
+       
+                if b_name == 'Building_2':
+                    dhw_2_p = self.model_dhw_b2.predict(df,predict_disable_shape_check=True)
+                    sg_2_p  = self.model_sg_b2.predict(df,predict_disable_shape_check=True)
+                    eep_2_p = self.model_eep_b2.predict(df,predict_disable_shape_check=True)
+                    cl_2_p  = self.model_cl_b2.predict(df,predict_disable_shape_check=True)
+                
+                if b_name == 'Building_3':
+                    dhw_3_p = self.model_dhw_b3.predict(df,predict_disable_shape_check=True)
+                    sg_3_p  = self.model_sg_b3.predict(df,predict_disable_shape_check=True)
+                    eep_3_p = self.model_eep_b3.predict(df,predict_disable_shape_check=True)
+                    cl_3_p  = self.model_cl_b3.predict(df,predict_disable_shape_check=True)
+                    
+                if b_name == 'Building_4':
+                    dhw_4_p = self.model_dhw_b4.predict(df,predict_disable_shape_check=True)
+                    sg_4_p  = self.model_sg_b4.predict(df,predict_disable_shape_check=True)
+                    eep_4_p = self.model_eep_b4.predict(df,predict_disable_shape_check=True)
+                    cl_4_p  = self.model_cl_b4.predict(df,predict_disable_shape_check=True)
+                    
+                if b_name == 'Building_5':
+                    dhw_5_p = self.model_dhw_b5.predict(df,predict_disable_shape_check=True)
+                    sg_5_p  = self.model_sg_b5.predict(df,predict_disable_shape_check=True)
+                    eep_5_p = self.model_eep_b5.predict(df,predict_disable_shape_check=True)
+                    cl_5_p  = self.model_cl_b5.predict(df,predict_disable_shape_check=True)
+                    
+                if b_name == 'Building_6':
+                    dhw_6_p = self.model_dhw_b6.predict(df,predict_disable_shape_check=True)
+                    sg_6_p  = self.model_sg_b6.predict(df,predict_disable_shape_check=True)
+                    eep_6_p = self.model_eep_b6.predict(df,predict_disable_shape_check=True)
+                    cl_6_p  = self.model_cl_b6.predict(df,predict_disable_shape_check=True)
+
+                
+            # 2. Neighbourhood Level
+            sg_total = sg_1_p + sg_2_p + sg_3_p + sg_4_p + sg_5_p + sg_6_p
+            cip_p  = self.model_cip.predict(df,predict_disable_shape_check=True)
+
+        
+            print("Setting the current Values")
+            current_vals = {
+                **{b_name: {
+                    'Equipment_Eletric_Power': 
+                 np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'non_shiftable_load')[0][i]],
+                
+                    'DHW_Heating': np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'dhw_demand')[0][i]],
+                
+                    'Cooling_Load': np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'cooling_demand')[0][i]]
+                    } for i,b_name in enumerate(self.building_names)},
+                'Solar_Generation': 
+            np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'solar_generation')[0][0]]/self.b0_pv_capacity*1000,
+                'Carbon_Intensity': np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'carbon_intensity')[0][0]]
+            }
+        
+
+            print("Setting the Predictions")
+            if self.prev_vals['Carbon_Intensity'] is None:
+                predictions_dict = {
+                    **{b_name: {
+                        'Equipment_Eletric_Power': [current_vals[b_name]['Equipment_Eletric_Power'] for _ in range(self.tau)],
+                        'DHW_Heating': [current_vals[b_name]['DHW_Heating'] for _ in range(self.tau)],
+                        'Cooling_Load': [current_vals[b_name]['Cooling_Load'] for _ in range(self.tau)]
+                        } for i,b_name in enumerate(self.building_names)},
+                    'Solar_Generation': [current_vals['Solar_Generation'] for _ in range(self.tau)],
+                    'Carbon_Intensity': [current_vals['Carbon_Intensity'] for _ in range(self.tau)]
+                }
+
+            else:
+                predictions_dict = {}
+                predict_inds = [t+1 for t in range(self.tau)]
+
+                for b_name in self.building_names:
+                    predictions_dict[b_name] = {}
+                
+                    for load_type in ['Equipment_Eletric_Power','DHW_Heating','Cooling_Load']:
+                    
+                        if load_type == 'Equipment_Eletric_Power':
+                            if b_name == 'Building_1':
+                                predictions_dict[b_name][load_type] = eep_1_p
+                            if b_name == 'Building_2':
+                                predictions_dict[b_name][load_type] = eep_2_p
+                            if b_name == 'Building_3':
+                                predictions_dict[b_name][load_type] = eep_3_p
+                            if b_name == 'Building_4':
+                                predictions_dict[b_name][load_type] = eep_4_p
+                            if b_name == 'Building_5':
+                                predictions_dict[b_name][load_type] = eep_5_p
+                            if b_name == 'Building_6':
+                                predictions_dict[b_name][load_type] = eep_6_p
+                            
+                        if load_type == 'DHW_Heating':
+                            if b_name == 'Building_1':
+                                predictions_dict[b_name][load_type] = dhw_1_p
+                            if b_name == 'Building_2':
+                                predictions_dict[b_name][load_type] = dhw_2_p
+                            if b_name == 'Building_3':
+                                predictions_dict[b_name][load_type] = dhw_3_p
+                            if b_name == 'Building_4':
+                                predictions_dict[b_name][load_type] = dhw_4_p
+                            if b_name == 'Building_5':
+                                predictions_dict[b_name][load_type] = dhw_5_p
+                            if b_name == 'Building_6':
+                                predictions_dict[b_name][load_type] = dhw_6_p
+                            
+                        if load_type == 'Cooling_Load':
+                            if b_name == 'Building_1':
+                                predictions_dict[b_name][load_type] = cl_1_p
+                            if b_name == 'Building_2':
+                                predictions_dict[b_name][load_type] = cl_2_p
+                            if b_name == 'Building_3':
+                                predictions_dict[b_name][load_type] = cl_3_p     
+                            if b_name == 'Building_4':
+                                predictions_dict[b_name][load_type] = cl_4_p
+                            if b_name == 'Building_5':
+                                predictions_dict[b_name][load_type] = cl_5_p
+                            if b_name == 'Building_6':
+                                predictions_dict[b_name][load_type] = cl_6_p     
+
+                predictions_dict['Solar_Generation'] = sg_total
+                predictions_dict['Carbon_Intensity'] = cip_p
+
+            self.prev_vals = current_vals
+            # ====================================================================
+            print("Done Prediction!")
         return predictions_dict
     
     
