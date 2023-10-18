@@ -1,2 +1,4 @@
 CityLearn==2.1b9
+tqdm
 lightgbm
+category_encoders
