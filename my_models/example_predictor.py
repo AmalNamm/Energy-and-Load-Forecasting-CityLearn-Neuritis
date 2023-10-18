@@ -182,7 +182,7 @@ class ExamplePredictor(BasePredictorModel):
         
         
         ### ENV Setting
-        env = 'online'
+        env = 'local'
         
         if env == 'local':
             print("Im working locally!")
@@ -193,6 +193,8 @@ class ExamplePredictor(BasePredictorModel):
             # 1. Housing Level
             for i,b_name in enumerate(self.building_names):
             
+                print("Housing Number: " + str(i))
+
                 v_list = []
                 f_list = []
                 for obs in self.observation_names:
@@ -305,6 +307,7 @@ class ExamplePredictor(BasePredictorModel):
         if env == 'online': 
             # 1. Housing Level
             for i,b_name in enumerate(self.building_names):
+                print("Housing Number: " + str(i))
             
                 v_list = []
                 f_list = []
@@ -366,6 +369,7 @@ class ExamplePredictor(BasePredictorModel):
         
             print("Setting the current Values")
             current_vals = {
+                
                 **{b_name: {
                     'Equipment_Eletric_Power': 
                  np.array(observations)[0][np.where(np.array(self.observation_names)[0] == 'non_shiftable_load')[0][i]],
@@ -445,10 +449,11 @@ class ExamplePredictor(BasePredictorModel):
 
                 predictions_dict['Solar_Generation'] = sg_total
                 predictions_dict['Carbon_Intensity'] = cip_p
-
+                
             self.prev_vals = current_vals
             # ====================================================================
-            print("Done Prediction!")
+        print("Done Prediction!")
+        print("Prediction Solar: " + str(predictions_dict['Solar_Generation']))
         return predictions_dict
     
     
