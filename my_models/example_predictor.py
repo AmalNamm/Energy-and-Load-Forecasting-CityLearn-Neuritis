@@ -102,7 +102,7 @@ class ExamplePredictor(BasePredictorModel):
 
     # Here I have to load the Prediction Model!
     def load(self):
-        
+        print("Loading the Models!")
         self.model_dhw_b1 = lgb.Booster(model_file='my_models/models/dhw_load_model_b1.txt')
         self.model_dhw_b2 = lgb.Booster(model_file='my_models/models/dhw_load_model_b2.txt')
         self.model_dhw_b3 = lgb.Booster(model_file='my_models/models/dhw_load_model_b3.txt')
@@ -116,7 +116,7 @@ class ExamplePredictor(BasePredictorModel):
         self.model_cl_b2  = lgb.Booster(model_file='my_models/models/cooling_load_model_b1.txt')
         self.model_cl_b3  = lgb.Booster(model_file='my_models/models/cooling_load_model_b1.txt')
         self.model_cip    = lgb.Booster(model_file='my_models/models/Carbon_Intensity_Power_model.txt')
-
+        print("Finished Loading the Models")
 
     def compute_forecast(self, observations):
         """Compute forecasts for each variable given current observation.
@@ -169,6 +169,7 @@ class ExamplePredictor(BasePredictorModel):
         
         
         # 1. Housing Level
+        print("Making the Housing Level Predictions")
         for i,b_name in enumerate(self.building_names):
             
             v_list = []
@@ -206,7 +207,9 @@ class ExamplePredictor(BasePredictorModel):
                 eep_3_p = self.model_eep_b3.predict(df,predict_disable_shape_check=True)
                 cl_3_p  = self.model_cl_b3.predict(df,predict_disable_shape_check=True)
 
-        
+                
+        # 2. Neighbourhood Level
+        print("Making the Neighbourhood Level Predictions")
         sg_total = sg_1_p + sg_2_p + sg_3_p
         cip_p  = self.model_cip.predict(df,predict_disable_shape_check=True)
 
