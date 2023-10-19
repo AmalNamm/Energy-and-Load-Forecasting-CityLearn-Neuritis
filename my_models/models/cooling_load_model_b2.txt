@@ -1618,7 +1618,7 @@ parameters:
 [cegb_penalty_feature_coupled: ]
 [path_smooth: 0]
 [interaction_constraints: ]
-[verbosity: -1]
+[verbosity: 1]
 [saved_feature_importance_type: 0]
 [linear_tree: 0]
 [max_bin: 255]
