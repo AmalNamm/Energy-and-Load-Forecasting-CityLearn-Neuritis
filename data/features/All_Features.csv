@@ -27,3 +27,11 @@
 25,Temperature Set Point (C),0.11777954919985056
 26,6h Prediction Electricity Pricing _$/kWh_,0.11698483246357516
 27,6h Outdoor Relative Humidity (%),0.1002291334740062
+28,Occupant Count (people),0.07029257689601565
+29,Average Unmet Cooling Setpoint Difference (C),0.05601046526452769
+30,DHW Heating (kWh),0.04123313346168378
+31,Day Type,0.04074278513801044
+32,Month,1.1102230246251565e-15
+33,Daylight Savings Status,1.1102230246251565e-15
+34,Heating Load (kWh),1.1102230246251565e-15
+35,HVAC Mode (Off/Cooling/Heating),1.1102230246251565e-15

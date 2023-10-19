@@ -1,22 +1,22 @@
 ,feature,score
-0,kg_CO2/kWh,5.32243893838286
-1,Hour,0.35046490692587495
+0,kg_CO2/kWh,5.322438938382859
+1,Hour,0.3503754599348583
 2,12h Outdoor Drybulb Temperature (C),0.26524614913107536
-3,6h Direct Solar Radiation (W/m2),0.23678693695911512
+3,6h Direct Solar Radiation (W/m2),0.2377699975633769
 4,Cooling Load (kWh),0.22080141743695103
-5,12h Outdoor Relative Humidity (%),0.21656814086973286
+5,12h Outdoor Relative Humidity (%),0.21490997188197047
 6,Day Type,0.21233884628768607
-7,Outdoor Relative Humidity (%),0.20787616996781644
-8,24h Prediction Electricity Pricing _$/kWh_,0.20431702745877955
-9,Outdoor Drybulb Temperature (C),0.20277649022091904
-10,6h Diffuse Solar Radiation (W/m2),0.19460826189454306
+7,24h Prediction Electricity Pricing _$/kWh_,0.2093364072058479
+8,Outdoor Relative Humidity (%),0.2093321426048651
+9,Outdoor Drybulb Temperature (C),0.20297398599402117
+10,6h Diffuse Solar Radiation (W/m2),0.19424027108613107
 11,24h Outdoor Drybulb Temperature (C),0.1686115084830897
 12,6h Outdoor Drybulb Temperature (C),0.1602593862136663
-13,Electricity Pricing _$/kWh_,0.15661054556477128
-14,12h Direct Solar Radiation (W/m2),0.1553490915995024
-15,Equipment Electric Power (kWh),0.15361844448886997
-16,24h Outdoor Relative Humidity (%),0.1506492616490811
+13,Electricity Pricing _$/kWh_,0.15960896525381107
+14,12h Direct Solar Radiation (W/m2),0.15351504267395555
+15,Equipment Electric Power (kWh),0.14919051314714293
+16,24h Outdoor Relative Humidity (%),0.1486992519747634
 17,Indoor Relative Humidity (%),0.1359507252993768
-18,Direct Solar Radiation (W/m2),0.13379739194009277
-19,Solar Generation (W/kW),0.1300583326801621
-20,Diffuse Solar Radiation (W/m2),0.10138547777670137
+18,Solar Generation (W/kW),0.12806667701665697
+19,Direct Solar Radiation (W/m2),0.12621450844203208
+20,Diffuse Solar Radiation (W/m2),0.1010713737515827
