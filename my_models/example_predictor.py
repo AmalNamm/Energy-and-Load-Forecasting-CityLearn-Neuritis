@@ -107,9 +107,9 @@ class ExamplePredictor(BasePredictorModel):
     def load(self):
         print("Loading the Models!")
 
-        self.model_dhw_b1 = joblib.load('my_models/models/dhw_load_model_b1_new.pkl')
-        self.model_dhw_b2 = joblib.load('my_models/models/dhw_load_model_b2_new.pkl')
-        self.model_dhw_b3 = joblib.load('my_models/models/dhw_load_model_b3_new.pkl')
+        self.model_dhw_b1 = joblib.load('my_models/models/dhw_load_model_b1_new_hyper.pkl')
+        self.model_dhw_b2 = joblib.load('my_models/models/dhw_load_model_b2_new_hyper.pkl')
+        self.model_dhw_b3 = joblib.load('my_models/models/dhw_load_model_b3_new_hyper.pkl')
         
         self.dhw_model_list = [self.model_dhw_b1,self.model_dhw_b2,self.model_dhw_b3]
         
@@ -120,19 +120,19 @@ class ExamplePredictor(BasePredictorModel):
         
         self.sg_model_list = [self.model_sg_b1,self.model_sg_b2,self.model_sg_b3]
         
-        self.model_eep_b1 = joblib.load('my_models/models/Equipment_Electric_Power_model_b1_new.pkl')
-        self.model_eep_b2 = joblib.load('my_models/models/Equipment_Electric_Power_model_b2_new.pkl')
-        self.model_eep_b3 = joblib.load('my_models/models/Equipment_Electric_Power_model_b3_new.pkl')
+        self.model_eep_b1 = joblib.load('my_models/models/Equipment_Electric_Power_model_b1_new_hyper.pkl')
+        self.model_eep_b2 = joblib.load('my_models/models/Equipment_Electric_Power_model_b2_new_hyper.pkl')
+        self.model_eep_b3 = joblib.load('my_models/models/Equipment_Electric_Power_model_b3_new_hyper.pkl')
         
         self.eep_model_list = [self.model_eep_b1,self.model_eep_b2,self.model_eep_b3]
         
-        self.model_cl_b1  = joblib.load('my_models/models/cooling_load_model_b1_new.pkl')
-        self.model_cl_b2  = joblib.load('my_models/models/cooling_load_model_b1_new.pkl')
-        self.model_cl_b3  = joblib.load('my_models/models/cooling_load_model_b1_new.pkl')
+        self.model_cl_b1  = joblib.load('my_models/models/cooling_load_model_b1_new_hyper.pkl')
+        self.model_cl_b2  = joblib.load('my_models/models/cooling_load_model_b1_new_hyper.pkl')
+        self.model_cl_b3  = joblib.load('my_models/models/cooling_load_model_b1_new_hyper.pkl')
         
         self.cl_model_list = [self.model_cl_b1,self.model_cl_b2,self.model_cl_b3]
         
-        self.model_cip    = joblib.load('my_models/models/Carbon_Intensity_Power_model_new.pkl')
+        self.model_cip    = joblib.load('my_models/models/Carbon_Intensity_Power_model_new_hyper.pkl')
         print("Finished Loading the Models")
         
     def compute_forecast(self, observations):
@@ -314,11 +314,20 @@ class ExamplePredictor(BasePredictorModel):
             b_dataframe.at[0,'indoor_dry_bulb_temperature_set_point']      = indoor_dry_bulb_temperature_set_point[i]
             
             b_dataframe = b_dataframe.astype(float)
-            
-            dhw_p.append(self.dhw_model_list[i].predict(b_dataframe))
-            sg_p.append(self.sg_model_list[i].predict(b_dataframe))
-            eep_p.append(self.eep_model_list[i].predict(b_dataframe))
-            cl_p.append(self.cl_model_list[i].predict(b_dataframe))
+             
+            if i > 2:
+                # Here I dont have any more pre-trained models for the specific building
+                # 1. Try: Just take a random model
+                dhw_p.append(self.dhw_model_list[i-i].predict(b_dataframe))
+                sg_p.append(self.sg_model_list[i-i].predict(b_dataframe))
+                eep_p.append(self.eep_model_list[i-i].predict(b_dataframe))
+                cl_p.append(self.cl_model_list[i-i].predict(b_dataframe))
+            else: 
+                dhw_p.append(self.dhw_model_list[i].predict(b_dataframe))
+                sg_p.append(self.sg_model_list[i].predict(b_dataframe))
+                eep_p.append(self.eep_model_list[i].predict(b_dataframe))
+                cl_p.append(self.cl_model_list[i].predict(b_dataframe))
+                
         
                         
             
