@@ -182,7 +182,7 @@ class ExamplePredictor(BasePredictorModel):
         
         
         ### ENV Setting
-        env = 'local'
+        env = 'online'
         
         if env == 'local':
             print("Im working locally!")
