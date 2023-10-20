@@ -61,11 +61,9 @@ def create_citylearn_env(config):
 
 
 def evaluate(config):
-    print("Starting local evaluation")
     
     env, env_data = create_citylearn_env(config)
     tau = 48
-    print("Env Created")
 
     model = SubmissionModel(env_data=env_data, tau=tau)
 

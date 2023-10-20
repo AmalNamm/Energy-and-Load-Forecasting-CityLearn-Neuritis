@@ -87,8 +87,6 @@ class ExamplePredictor(BasePredictorModel):
         self.prev_observations = None
         self.buffer = {'key': []}
         # ====================================================================
-        print("=========================Available Observations=========================")
-        print(self.observation_names)
         # dummy forecaster buffer - delete for your implementation
         # ====================================================================
         self.prev_vals = {
@@ -105,7 +103,6 @@ class ExamplePredictor(BasePredictorModel):
 
     # Here I have to load the Prediction Model!
     def load(self):
-        print("Loading the Models!")
 
         self.model_dhw_b1 = joblib.load('my_models/models/dhw_load_model_b1_new_hyper.pkl')
         self.model_dhw_b2 = joblib.load('my_models/models/dhw_load_model_b2_new_hyper.pkl')
@@ -114,9 +111,9 @@ class ExamplePredictor(BasePredictorModel):
         self.dhw_model_list = [self.model_dhw_b1,self.model_dhw_b2,self.model_dhw_b3]
         
       
-        self.model_sg_b1  = joblib.load('my_models/models/solar_generation_model_b1_new.pkl')
-        self.model_sg_b2  = joblib.load('my_models/models/solar_generation_model_b2_new.pkl')
-        self.model_sg_b3  = joblib.load('my_models/models/solar_generation_model_b3_new.pkl')
+        self.model_sg_b1  = joblib.load('my_models/models/solar_generation_model_b1_new_hyper.pkl')
+        self.model_sg_b2  = joblib.load('my_models/models/solar_generation_model_b2_new_hyper.pkl')
+        self.model_sg_b3  = joblib.load('my_models/models/solar_generation_model_b3_new_hyper.pkl')
         
         self.sg_model_list = [self.model_sg_b1,self.model_sg_b2,self.model_sg_b3]
         
@@ -133,37 +130,9 @@ class ExamplePredictor(BasePredictorModel):
         self.cl_model_list = [self.model_cl_b1,self.model_cl_b2,self.model_cl_b3]
         
         self.model_cip    = joblib.load('my_models/models/Carbon_Intensity_Power_model_new_hyper.pkl')
-        print("Finished Loading the Models")
         
     def compute_forecast(self, observations):
-        """Compute forecasts for each variable given current observation.
 
-        Args:
-            observation (List[List]): observation data for current time instance, as
-                specified in CityLearn documentation. The structure of this list can
-                be viewed via CityLearnEnv.observation_names.
-
-        Returns:
-            predictions_dict (dict): dictionary containing forecasts for each
-                variable. Format is as follows:
-                {
-                    'Building_1': { # this is env.buildings[0].name
-                        'Equipment_Eletric_Power': [ list of 48 floats - predicted equipment electric power for Building_1 ],
-                        'DHW_Heating': [ list of 48 floats - predicted DHW heating for Building_1 ],
-                        'Cooling_Load': [ list of 48 floats - predicted cooling load for Building_1 ]
-                        },
-                    'Building_2': ... (as above),
-                    'Building_3': ... (as above),
-                    'Solar_Generation': [ list of 48 floats - predicted solar generation ],
-                    'Carbon_Intensity': [ list of 48 floats - predicted carbon intensity ]
-                }
-        """
-
-        # ====================================================================
-        # insert your forecasting code here
-        # ====================================================================
-        
-        
         
         # Features of the Predictors: 
         
@@ -191,8 +160,7 @@ class ExamplePredictor(BasePredictorModel):
 
         
         building_numbers = len(self.building_names)
-        print("We have " + str(building_numbers) + " Buildings in the System!")
-        
+       
         feature_values_global = []
         indoor_dry_bulb_temperature                          = []
         non_shiftable_load                                   = []
@@ -211,10 +179,7 @@ class ExamplePredictor(BasePredictorModel):
         
                        
         # Check how many Buildings are in the System!
-        for i,b_name in enumerate(self.building_names):
-            
-            print("Working on Building: " + str(b_name))
-            
+        for i,b_name in enumerate(self.building_names):            
             
             tmp_observation_names = []
             for obssss in self.observation_names:
@@ -327,17 +292,12 @@ class ExamplePredictor(BasePredictorModel):
                 sg_p.append(self.sg_model_list[i].predict(b_dataframe))
                 eep_p.append(self.eep_model_list[i].predict(b_dataframe))
                 cl_p.append(self.cl_model_list[i].predict(b_dataframe))
-                
-        
-                        
-            
         
         sg_total = sg_p[0] + sg_p[1] + sg_p[2]
         cip_p  = self.model_cip.predict(b_dataframe)
         
         
         
-        print("Setting the current Values")
         current_vals = {
             **{b_name: {
                 'Equipment_Eletric_Power': 
@@ -353,7 +313,6 @@ class ExamplePredictor(BasePredictorModel):
         }
         
 
-        print("Setting the Predictions")
         if self.prev_vals['Carbon_Intensity'] is None:
             predictions_dict = {
                 **{b_name: {
@@ -388,9 +347,6 @@ class ExamplePredictor(BasePredictorModel):
 
         self.prev_vals = current_vals
             # ====================================================================
-
-        print("Done Prediction!")
-        print("Prediction Solar: " + str(predictions_dict['Solar_Generation']))
         return predictions_dict
     
     
