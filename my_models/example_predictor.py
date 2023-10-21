@@ -1,21 +1,3 @@
-"""
-Implementation of example prediction method.
-Note, this forecasting method is illustratively *terrible*, but
-provides a reference on how to format your forecasting method.
-
-The forecasting/prediction model is implemented as a class.
-
-This class must have the following methods:
-    - __init__(self, ...), which initialises the Predictor object and
-        performs any initial setup you might want to do.
-    - compute_forecast(observation), which executes your prediction method,
-        creating timeseries forecasts for [building electrical loads,
-        normalise solar pv generation powers, grid carbon intensity]
-        given the current observation.
-
-You may wish to implement additional methods to make your model code neater.
-"""
-
 import os
 import glob
 import numpy as np 
