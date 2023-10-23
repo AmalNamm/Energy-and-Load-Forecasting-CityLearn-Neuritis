@@ -127,9 +127,9 @@ class ExamplePredictorFusion(BasePredictorModel):
         
         self.eep_model_list_GBM = [self.model_eep_b1_GBM,self.model_eep_b2_GBM,self.model_eep_b3_GBM]
         
-        self.model_cl_b1_GBM  = joblib.load('my_models/models/fusion/LightGBM/cooling_demand_model_b1.pkl')
-        self.model_cl_b2_GBM  = joblib.load('my_models/models/fusion/LightGBM/cooling_demand_model_b2.pkl')
-        self.model_cl_b3_GBM  = joblib.load('my_models/models/fusion/LightGBM/cooling_demand_model_b3.pkl')
+        self.model_cl_b1_GBM  = joblib.load('my_models/models/fusion/LightGBM/cooling_demand_model_b1_2.pkl')
+        self.model_cl_b2_GBM  = joblib.load('my_models/models/fusion/LightGBM/cooling_demand_model_b2_2.pkl')
+        self.model_cl_b3_GBM  = joblib.load('my_models/models/fusion/LightGBM/cooling_demand_model_b3_2.pkl')
         
         self.cl_model_list_GBM = [self.model_cl_b1_GBM,self.model_cl_b2_GBM,self.model_cl_b3_GBM]
         
@@ -158,9 +158,9 @@ class ExamplePredictorFusion(BasePredictorModel):
         
         self.eep_model_list_LSTM = [self.model_eep_b1_LSTM,self.model_eep_b2_LSTM,self.model_eep_b3_LSTM]
         
-        self.model_cl_b1_LSTM  = joblib.load('my_models/models/fusion/LSTM/cooling_demand_model_b1.pkl')
-        self.model_cl_b2_LSTM  = joblib.load('my_models/models/fusion/LSTM/cooling_demand_model_b2.pkl')
-        self.model_cl_b3_LSTM  = joblib.load('my_models/models/fusion/LSTM/cooling_demand_model_b3.pkl')
+        self.model_cl_b1_LSTM  = joblib.load('my_models/models/fusion/LSTM/cooling_demand_model_b1_2.pkl')
+        self.model_cl_b2_LSTM  = joblib.load('my_models/models/fusion/LSTM/cooling_demand_model_b2_2.pkl')
+        self.model_cl_b3_LSTM  = joblib.load('my_models/models/fusion/LSTM/cooling_demand_model_b3_2.pkl')
         
         self.cl_model_list_LSTM = [self.model_cl_b1_LSTM,self.model_cl_b2_LSTM,self.model_cl_b3_LSTM]
         
@@ -427,7 +427,6 @@ class ExamplePredictorFusion(BasePredictorModel):
                 predictions_dict['Carbon_Intensity'] = cip_p_GBM
 
         self.prev_vals = current_vals
-        print("************** DONE *************")
         return predictions_dict
     
     
