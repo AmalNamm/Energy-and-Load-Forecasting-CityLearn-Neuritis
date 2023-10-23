@@ -15,11 +15,6 @@ This class must have the following methods:
 
 You may wish to implement additional methods to make your model code neater.
 """
-import subprocess
-import sys
-
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", keras])
 
 import os
 import glob
