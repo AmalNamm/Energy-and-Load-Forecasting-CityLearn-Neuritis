@@ -377,10 +377,14 @@ class ExamplePredictorFusion(BasePredictorModel):
                 cl_p_LSTM.append(self.cl_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))  
                 
                             
+        
+        sg_total_LSTM = []
+        sg_total_GBM  = []
+        for lstm,gbm in zip(sg_total_LSTM,sg_total_GBM):
+            sg_total_LSTM = sg_total_LSTM + lstm
+            sg_total_GBM = sg_total_GBM + gbm
             
-        sg_total_LSTM = sg_p_LSTM[0] + sg_p_LSTM[1] + sg_p_LSTM[2]
         cip_p_LSTM    = self.model_cip_LSTM.predict(b_dim_dataframe)
-        sg_total_GBM  = sg_p_GBM[0] + sg_p_GBM[1] + sg_p_GBM[2]
         cip_p_GBM     = self.model_cip_GBM.predict(b_dataframe)
         
         
@@ -446,18 +450,14 @@ class ExamplePredictorFusion(BasePredictorModel):
                     for load_type in ['Equipment_Eletric_Power','DHW_Heating','Cooling_Load']:
                     
                         if load_type == 'Equipment_Eletric_Power':
-                            #eep = [[0 if x < 0 else x for x in y] for y in e_eep[i]]
                             predictions_dict[b_name][load_type] = e_eep[i]
                             
                         if load_type == 'DHW_Heating':
-                            #dhw = [[0 if x < 0 else x for x in y] for y in e_dhw[i]]
                             predictions_dict[b_name][load_type] = e_dhw[i]
                             
                         if load_type == 'Cooling_Load':
-                            #cl = [[0 if x < 0 else x for x in y] for y in e_cl[i]]
                             predictions_dict[b_name][load_type] = e_cl[i]             
                 
-                #sg = [[0 if x < 0 else x for x in y] for y in e_sg_t]
                 predictions_dict['Solar_Generation'] = e_sg_t
                 predictions_dict['Carbon_Intensity'] = cip_p_GBM
 
