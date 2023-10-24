@@ -110,7 +110,7 @@ def evaluate(config):
             observations, _, done, _ = env.step(actions)
             if done:
                 break
-            
+
             num_steps += 1
 
     except KeyboardInterrupt:

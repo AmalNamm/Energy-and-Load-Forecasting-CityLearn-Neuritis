@@ -12,12 +12,7 @@ import joblib
 from difflib import SequenceMatcher
 from sklearn.ensemble import VotingRegressor
 from sklearn.metrics import mean_squared_error
-from tensorflow.keras.models import load_model
-from keras.layers import Layer
-import keras.backend as K
-import tensorflow as tf
 from tensorflow.keras.utils import register_keras_serializable
-
 
 from lightgbm import LGBMRegressor
 from sklearn.metrics import mean_pinball_loss
@@ -25,8 +20,15 @@ from sklearn.metrics import mean_pinball_loss
 from sklearn.model_selection import train_test_split
 import matplotlib.ticker as ticker
 import re
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import LSTM, Dense, Input, Concatenate
+import tensorflow as tf
+from tensorflow.keras.models import load_model
+from keras.layers import Layer
+import keras.backend as K
 
 from my_models.base_predictor_model import BasePredictorModel
+
 
 class BahdanauAttention(Layer):
     def __init__(self, units, **kwargs):
@@ -62,11 +64,10 @@ class BahdanauAttention(Layer):
         }
         base_config = super(BahdanauAttention, self).get_config()
         return dict(list(base_config.items()) + list(config.items()))
+    
 
-
-
-class ExamplePredictorFusion(BasePredictorModel):
-
+class ExamplePredictorLSTM(BasePredictorModel):
+    
     
     def shape(lst):
         length = len(lst)
@@ -78,22 +79,6 @@ class ExamplePredictorFusion(BasePredictorModel):
         
         
     def __init__(self, env_data, tau):
-        """Initialise Prediction object and perform setup.
-        
-        Args:
-            env_data : Dictionary containing data about the environment 
-                    observation_names = env.observation_names,
-                    observation_space = env.observation_space,
-                    action_space = env.action_space,
-                    time_steps = env.time_steps,
-                    buildings_metadata = env.get_metadata()['buildings'],
-                    num_buildings = len(env.buildings),
-                    building_names = [b.name for b in env.buildings],
-                    b0_pv_capacity = env.buildings[0].pv.nominal_power,
-                    
-            tau (int): length of planning horizon (number of time instances
-                into the future to forecast).
-        """
 
         # Check local evaluation
         self.num_buildings = env_data['num_buildings']
@@ -104,16 +89,10 @@ class ExamplePredictorFusion(BasePredictorModel):
 
         # Load in pre-computed prediction model.
         self.load()
-        # ====================================================================
-        # insert your loading code here
-        # ====================================================================
 
         # Create buffer/tracking attributes
         self.prev_observations = None
         self.buffer = {'key': []}
-        # ====================================================================
-        # dummy forecaster buffer - delete for your implementation
-        # ====================================================================
         self.prev_vals = {
             **{b_name: {
                 'Equipment_Eletric_Power': None,
@@ -128,37 +107,6 @@ class ExamplePredictorFusion(BasePredictorModel):
 
     # Here I have to load the Prediction Model!
     def load(self):
-
-        # Fusion Models
-        
-        self.model_dhw_b1_GBM = joblib.load('my_models/models/fusion/LightGBM/dhw_demand_model_b1.pkl')
-        self.model_dhw_b2_GBM = joblib.load('my_models/models/fusion/LightGBM/dhw_demand_model_b2.pkl')
-        self.model_dhw_b3_GBM = joblib.load('my_models/models/fusion/LightGBM/dhw_demand_model_b3.pkl')
-        
-        self.dhw_model_list_GBM = [self.model_dhw_b1_GBM,self.model_dhw_b2_GBM,self.model_dhw_b3_GBM]
-        
-      
-        self.model_sg_b1_GBM  = joblib.load('my_models/models/fusion/LightGBM/solar_generation_model_b1.pkl')
-        self.model_sg_b2_GBM  = joblib.load('my_models/models/fusion/LightGBM/solar_generation_model_b2.pkl')
-        self.model_sg_b3_GBM  = joblib.load('my_models/models/fusion/LightGBM/solar_generation_model_b3.pkl')
-        
-        self.sg_model_list_GBM = [self.model_sg_b1_GBM,self.model_sg_b2_GBM,self.model_sg_b3_GBM]
-        
-        self.model_eep_b1_GBM = joblib.load('my_models/models/fusion/LightGBM/Equipment_Electric_Power_model_b1.pkl')
-        self.model_eep_b2_GBM = joblib.load('my_models/models/fusion/LightGBM/Equipment_Electric_Power_model_b2.pkl')
-        self.model_eep_b3_GBM = joblib.load('my_models/models/fusion/LightGBM/Equipment_Electric_Power_model_b3.pkl')
-        
-        self.eep_model_list_GBM = [self.model_eep_b1_GBM,self.model_eep_b2_GBM,self.model_eep_b3_GBM]
-        
-        self.model_cl_b1_GBM  = joblib.load('my_models/models/fusion/LightGBM/cooling_demand_model_b1.pkl')
-        self.model_cl_b2_GBM  = joblib.load('my_models/models/fusion/LightGBM/cooling_demand_model_b2.pkl')
-        self.model_cl_b3_GBM  = joblib.load('my_models/models/fusion/LightGBM/cooling_demand_model_b3.pkl')
-        
-        self.cl_model_list_GBM = [self.model_cl_b1_GBM,self.model_cl_b2_GBM,self.model_cl_b3_GBM]
-        
-        self.model_cip_GBM    = joblib.load('my_models/models/fusion/LightGBM/Carbon_Intensity_model.pkl')
-        
-        
         
         # LSTM Models
         if 'BahdanauAttention' not in tf.keras.utils.get_custom_objects():
@@ -191,23 +139,6 @@ class ExamplePredictorFusion(BasePredictorModel):
         self.model_cip_LSTM = load_model('my_models/models/LSTM/Carbon_Intensity_model.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
     def compute_forecast(self, observations):
-
-        
-        # Features of the Predictors: 
-        
-        #'day_type', 'hour', 'outdoor_dry_bulb_temperature', 'outdoor_dry_bulb_temperature_predicted_6h', 
-        #'outdoor_dry_bulb_temperature_predicted_12h', 'outdoor_dry_bulb_temperature_predicted_24h', 'diffuse_solar_irradiance',
-        #'diffuse_solar_irradiance_predicted_6h', 'diffuse_solar_irradiance_predicted_12h', 
-        #'diffuse_solar_irradiance_predicted_24h', 'direct_solar_irradiance', 'direct_solar_irradiance_predicted_6h',
-        #'direct_solar_irradiance_predicted_12h', 'direct_solar_irradiance_predicted_24h', 'carbon_intensity', 
-        #'indoor_dry_bulb_temperature', 'non_shiftable_load', 'solar_generation', 'dhw_storage_soc', 'electrical_storage_soc', 
-        #'electricity_pricing', 'electricity_pricing_predicted_6h', 
-        #'electricity_pricing_predicted_12h', 'electricity_pricing_predicted_24h', 'cooling_demand',
-        #'dhw_demand','indoor_dry_bulb_temperature_set_point'
-        
-        # A total of 27 Available Features! (Right now all are in use!)
-        
-        # Dynamic Code for the Forecasting
         
         # Save the values, which are at the beginning in lists and static for each building
         feature_names_global  = ['day_type', 'hour', 'outdoor_dry_bulb_temperature', 'outdoor_dry_bulb_temperature_predicted_6h',  
@@ -351,19 +282,6 @@ class ExamplePredictorFusion(BasePredictorModel):
             b_dataframe = b_dataframe.astype(float)
             b_dim_dataframe = np.reshape(b_dataframe.values, (b_dataframe.shape[0], 1, b_dataframe.shape[1]))
             
-            # Forecast with the LightGBM Models!
-            if i > 2:
-                dhw_p_GBM.append(self.dhw_model_list_GBM[i-i].predict(b_dataframe))
-                sg_p_GBM.append(self.sg_model_list_GBM[i-i].predict(b_dataframe))
-                eep_p_GBM.append(self.eep_model_list_GBM[i-i].predict(b_dataframe))
-                cl_p_GBM.append(self.cl_model_list_GBM[i-i].predict(b_dataframe))
-            else: 
-                dhw_p_GBM.append(self.dhw_model_list_GBM[i].predict(b_dataframe))
-                sg_p_GBM.append(self.sg_model_list_GBM[i].predict(b_dataframe))
-                eep_p_GBM.append(self.eep_model_list_GBM[i].predict(b_dataframe))
-                cl_p_GBM.append(self.cl_model_list_GBM[i].predict(b_dataframe))
-        
-        
             # Forecast with the LSTM Models!
             if i > 2:
                 dhw_p_LSTM.append(self.dhw_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
@@ -376,39 +294,16 @@ class ExamplePredictorFusion(BasePredictorModel):
                 eep_p_LSTM.append(self.eep_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
                 cl_p_LSTM.append(self.cl_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))  
                 
-                            
-            
         sg_total_LSTM = sg_p_LSTM[0] + sg_p_LSTM[1] + sg_p_LSTM[2]
-        cip_p_LSTM    = self.model_cip_LSTM.predict(b_dim_dataframe)
-        sg_total_GBM  = sg_p_GBM[0] + sg_p_GBM[1] + sg_p_GBM[2]
-        cip_p_GBM     = self.model_cip_GBM.predict(b_dataframe)
-        
-        
-        
-        # Ensamble the predictions
-        e_dhw  = []
-        e_eep  = []
-        e_cl   = []
-        
-        for lstm,gbm in zip(dhw_p_LSTM, dhw_p_GBM):
-            e_dhw.append((lstm + gbm) / 2)
-     
-        for lstm,gbm in zip(eep_p_LSTM, eep_p_GBM):
-            e_eep.append((lstm + gbm) / 2)
-
-        for lstm,gbm in zip(cl_p_LSTM, cl_p_GBM):
-            e_cl.append((lstm + gbm) / 2)
-    
-        e_sg_t = (sg_total_LSTM + sg_total_GBM) / 2
-
-        
+        cip_p_LSTM    = self.model_cip_LSTM.predict(b_dim_dataframe, verbose=0)
         
         for i,b_name in enumerate(self.building_names):    
-            e_dhw[i] = e_dhw[i].reshape(-1)
-            e_eep[i] = e_eep[i].reshape(-1)
-            e_cl[i]  = e_cl[i].reshape(-1)
-        e_sg_t = e_sg_t.reshape(-1)
-            
+            dhw_p_LSTM[i] = dhw_p_LSTM[i].reshape(-1)
+            eep_p_LSTM[i] = eep_p_LSTM[i].reshape(-1)
+            cl_p_LSTM[i]  = cl_p_LSTM[i].reshape(-1)
+        sg_total_LSTM = sg_total_LSTM.reshape(-1)
+        cip_p_LSTM = cip_p_LSTM.reshape(-1) 
+
         
         current_vals = {
             **{b_name: {
@@ -446,20 +341,16 @@ class ExamplePredictorFusion(BasePredictorModel):
                     for load_type in ['Equipment_Eletric_Power','DHW_Heating','Cooling_Load']:
                     
                         if load_type == 'Equipment_Eletric_Power':
-                            #eep = [[0 if x < 0 else x for x in y] for y in e_eep[i]]
-                            predictions_dict[b_name][load_type] = e_eep[i]
+                            predictions_dict[b_name][load_type] = eep_p_LSTM[i]
                             
                         if load_type == 'DHW_Heating':
-                            #dhw = [[0 if x < 0 else x for x in y] for y in e_dhw[i]]
-                            predictions_dict[b_name][load_type] = e_dhw[i]
+                            predictions_dict[b_name][load_type] = dhw_p_LSTM[i]
                             
                         if load_type == 'Cooling_Load':
-                            #cl = [[0 if x < 0 else x for x in y] for y in e_cl[i]]
-                            predictions_dict[b_name][load_type] = e_cl[i]             
+                            predictions_dict[b_name][load_type] = cl_p_LSTM[i]             
                 
-                #sg = [[0 if x < 0 else x for x in y] for y in e_sg_t]
-                predictions_dict['Solar_Generation'] = e_sg_t
-                predictions_dict['Carbon_Intensity'] = cip_p_GBM
+                predictions_dict['Solar_Generation'] = sg_total_LSTM
+                predictions_dict['Carbon_Intensity'] = cip_p_LSTM
 
         self.prev_vals = current_vals
         return predictions_dict
