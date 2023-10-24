@@ -403,7 +403,7 @@ class ExamplePredictorFusion(BasePredictorModel):
         for lstm,gbm in zip(cl_p_LSTM, cl_p_GBM):
             e_cl.append((lstm + gbm) / 2)
     
-        e_sg_t = (sg_total_LSTM + sg_total_GBM) / 2
+        #e_sg_t = (sg_total_LSTM + sg_total_GBM) / 2
 
         
         
@@ -458,7 +458,7 @@ class ExamplePredictorFusion(BasePredictorModel):
                         if load_type == 'Cooling_Load':
                             predictions_dict[b_name][load_type] = e_cl[i]             
                 
-                predictions_dict['Solar_Generation'] = e_sg_t
+                predictions_dict['Solar_Generation'] = sg_total_LSTM
                 predictions_dict['Carbon_Intensity'] = cip_p_GBM
 
         self.prev_vals = current_vals
