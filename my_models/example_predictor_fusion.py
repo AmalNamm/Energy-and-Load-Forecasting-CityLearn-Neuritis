@@ -108,22 +108,22 @@ class ExamplePredictorFusion(BasePredictorModel):
 
         # Fusion Models
         
-        self.model_dhw_b1_GBM = joblib.load('my_models/models/fusion/LightGBM/dhw_demand_model_b1.pkl')
-        self.model_dhw_b2_GBM = joblib.load('my_models/models/fusion/LightGBM/dhw_demand_model_b2.pkl')
-        self.model_dhw_b3_GBM = joblib.load('my_models/models/fusion/LightGBM/dhw_demand_model_b3.pkl')
+        self.model_dhw_b1_GBM = joblib.load('my_models/models/fusion/LightGBM/dhw_demand_model_b1_2.pkl')
+        self.model_dhw_b2_GBM = joblib.load('my_models/models/fusion/LightGBM/dhw_demand_model_b2_2.pkl')
+        self.model_dhw_b3_GBM = joblib.load('my_models/models/fusion/LightGBM/dhw_demand_model_b3_2.pkl')
         
         self.dhw_model_list_GBM = [self.model_dhw_b1_GBM,self.model_dhw_b2_GBM,self.model_dhw_b3_GBM]
         
       
-        self.model_sg_b1_GBM  = joblib.load('my_models/models/fusion/LightGBM/solar_generation_model_b1.pkl')
-        self.model_sg_b2_GBM  = joblib.load('my_models/models/fusion/LightGBM/solar_generation_model_b2.pkl')
-        self.model_sg_b3_GBM  = joblib.load('my_models/models/fusion/LightGBM/solar_generation_model_b3.pkl')
+        self.model_sg_b1_GBM  = joblib.load('my_models/models/fusion/LightGBM/solar_generation_model_b1_2.pkl')
+        self.model_sg_b2_GBM  = joblib.load('my_models/models/fusion/LightGBM/solar_generation_model_b2_2.pkl')
+        self.model_sg_b3_GBM  = joblib.load('my_models/models/fusion/LightGBM/solar_generation_model_b3_2.pkl')
         
         self.sg_model_list_GBM = [self.model_sg_b1_GBM,self.model_sg_b2_GBM,self.model_sg_b3_GBM]
         
-        self.model_eep_b1_GBM = joblib.load('my_models/models/fusion/LightGBM/Equipment_Electric_Power_model_b1.pkl')
-        self.model_eep_b2_GBM = joblib.load('my_models/models/fusion/LightGBM/Equipment_Electric_Power_model_b2.pkl')
-        self.model_eep_b3_GBM = joblib.load('my_models/models/fusion/LightGBM/Equipment_Electric_Power_model_b3.pkl')
+        self.model_eep_b1_GBM = joblib.load('my_models/models/fusion/LightGBM/Equipment_Electric_Power_model_b1_2.pkl')
+        self.model_eep_b2_GBM = joblib.load('my_models/models/fusion/LightGBM/Equipment_Electric_Power_model_b2_2.pkl')
+        self.model_eep_b3_GBM = joblib.load('my_models/models/fusion/LightGBM/Equipment_Electric_Power_model_b3_2.pkl')
         
         self.eep_model_list_GBM = [self.model_eep_b1_GBM,self.model_eep_b2_GBM,self.model_eep_b3_GBM]
         
@@ -133,7 +133,7 @@ class ExamplePredictorFusion(BasePredictorModel):
         
         self.cl_model_list_GBM = [self.model_cl_b1_GBM,self.model_cl_b2_GBM,self.model_cl_b3_GBM]
         
-        self.model_cip_GBM    = joblib.load('my_models/models/fusion/LightGBM/Carbon_Intensity_model.pkl')
+        self.model_cip_GBM    = joblib.load('my_models/models/fusion/LightGBM/Carbon_Intensity_model_2.pkl')
         
         
         
@@ -158,9 +158,9 @@ class ExamplePredictorFusion(BasePredictorModel):
         
         self.eep_model_list_LSTM = [self.model_eep_b1_LSTM,self.model_eep_b2_LSTM,self.model_eep_b3_LSTM]
         
-        self.model_cl_b1_LSTM  = joblib.load('my_models/models/fusion/LSTM/cooling_demand_model_b1_2.pkl')
-        self.model_cl_b2_LSTM  = joblib.load('my_models/models/fusion/LSTM/cooling_demand_model_b2_2.pkl')
-        self.model_cl_b3_LSTM  = joblib.load('my_models/models/fusion/LSTM/cooling_demand_model_b3_2.pkl')
+        self.model_cl_b1_LSTM  = joblib.load('my_models/models/fusion/LSTM/cooling_demand_model_b1.pkl')
+        self.model_cl_b2_LSTM  = joblib.load('my_models/models/fusion/LSTM/cooling_demand_model_b2.pkl')
+        self.model_cl_b3_LSTM  = joblib.load('my_models/models/fusion/LSTM/cooling_demand_model_b3.pkl')
         
         self.cl_model_list_LSTM = [self.model_cl_b1_LSTM,self.model_cl_b2_LSTM,self.model_cl_b3_LSTM]
         
