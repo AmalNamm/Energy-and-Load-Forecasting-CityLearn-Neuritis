@@ -193,22 +193,6 @@ class ExamplePredictorFusion(BasePredictorModel):
     def compute_forecast(self, observations):
 
         
-        # Features of the Predictors: 
-        
-        #'day_type', 'hour', 'outdoor_dry_bulb_temperature', 'outdoor_dry_bulb_temperature_predicted_6h', 
-        #'outdoor_dry_bulb_temperature_predicted_12h', 'outdoor_dry_bulb_temperature_predicted_24h', 'diffuse_solar_irradiance',
-        #'diffuse_solar_irradiance_predicted_6h', 'diffuse_solar_irradiance_predicted_12h', 
-        #'diffuse_solar_irradiance_predicted_24h', 'direct_solar_irradiance', 'direct_solar_irradiance_predicted_6h',
-        #'direct_solar_irradiance_predicted_12h', 'direct_solar_irradiance_predicted_24h', 'carbon_intensity', 
-        #'indoor_dry_bulb_temperature', 'non_shiftable_load', 'solar_generation', 'dhw_storage_soc', 'electrical_storage_soc', 
-        #'electricity_pricing', 'electricity_pricing_predicted_6h', 
-        #'electricity_pricing_predicted_12h', 'electricity_pricing_predicted_24h', 'cooling_demand',
-        #'dhw_demand','indoor_dry_bulb_temperature_set_point'
-        
-        # A total of 27 Available Features! (Right now all are in use!)
-        
-        # Dynamic Code for the Forecasting
-        
         # Save the values, which are at the beginning in lists and static for each building
         feature_names_global  = ['day_type', 'hour', 'outdoor_dry_bulb_temperature', 'outdoor_dry_bulb_temperature_predicted_6h',  
                                   'outdoor_dry_bulb_temperature_predicted_12h', 'outdoor_dry_bulb_temperature_predicted_24h', 'diffuse_solar_irradiance', 
@@ -377,12 +361,9 @@ class ExamplePredictorFusion(BasePredictorModel):
                 cl_p_LSTM.append(self.cl_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))  
                 
                             
+        sg_total_GBM  = np.sum(sg_p_GBM, 0)
+        sg_total_LSTM = np.sum(sg_p_LSTM, 0)
         
-        sg_total_LSTM = []
-        sg_total_GBM  = []
-        for lstm,gbm in zip(sg_total_LSTM,sg_total_GBM):
-            sg_total_LSTM = sg_total_LSTM + lstm
-            sg_total_GBM = sg_total_GBM + gbm
             
         cip_p_LSTM    = self.model_cip_LSTM.predict(b_dim_dataframe)
         cip_p_GBM     = self.model_cip_GBM.predict(b_dataframe)
@@ -411,7 +392,7 @@ class ExamplePredictorFusion(BasePredictorModel):
             e_dhw[i] = e_dhw[i].reshape(-1)
             e_eep[i] = e_eep[i].reshape(-1)
             e_cl[i]  = e_cl[i].reshape(-1)
-        e_sg_t = e_sg_t.reshape(-1)
+        sg_total_LSTM = sg_total_LSTM.reshape(-1)
             
         
         current_vals = {
@@ -459,7 +440,7 @@ class ExamplePredictorFusion(BasePredictorModel):
                             predictions_dict[b_name][load_type] = e_cl[i]             
                 
                 predictions_dict['Solar_Generation'] = sg_total_LSTM
-                predictions_dict['Carbon_Intensity'] = cip_p_GBM
+                predictions_dict['Carbon_Intensity'] = cip_p_LSTM
 
         self.prev_vals = current_vals
         return predictions_dict

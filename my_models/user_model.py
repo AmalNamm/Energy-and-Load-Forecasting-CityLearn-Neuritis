@@ -9,4 +9,4 @@ from my_models.example_predictor_lstm import ExamplePredictorLSTM
 ###################################################################
 
 
-SubmissionModel = ExamplePredictorFusion
+SubmissionModel = ExamplePredictorLSTM

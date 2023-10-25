@@ -137,6 +137,7 @@ class ExamplePredictorLSTM(BasePredictorModel):
         self.cl_model_list_LSTM = [self.model_cl_b1_LSTM,self.model_cl_b2_LSTM,self.model_cl_b3_LSTM]
         
         self.model_cip_LSTM = load_model('my_models/models/LSTM/Carbon_Intensity_model.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_cip_GBM    = joblib.load('my_models/models/fusion/LightGBM/Carbon_Intensity_model.pkl')
         
     def compute_forecast(self, observations):
         
@@ -294,15 +295,15 @@ class ExamplePredictorLSTM(BasePredictorModel):
                 eep_p_LSTM.append(self.eep_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
                 cl_p_LSTM.append(self.cl_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))  
                 
-        sg_total_LSTM = sg_p_LSTM[0] + sg_p_LSTM[1] + sg_p_LSTM[2]
-        cip_p_LSTM    = self.model_cip_LSTM.predict(b_dim_dataframe, verbose=0)
+        sg_total_LSTM = np.sum(sg_p_LSTM, 0)
+        
+        cip_p_GBM    = self.model_cip_GBM.predict(b_dataframe)
         
         for i,b_name in enumerate(self.building_names):    
             dhw_p_LSTM[i] = dhw_p_LSTM[i].reshape(-1)
             eep_p_LSTM[i] = eep_p_LSTM[i].reshape(-1)
             cl_p_LSTM[i]  = cl_p_LSTM[i].reshape(-1)
         sg_total_LSTM = sg_total_LSTM.reshape(-1)
-        cip_p_LSTM = cip_p_LSTM.reshape(-1) 
 
         
         current_vals = {
@@ -350,7 +351,7 @@ class ExamplePredictorLSTM(BasePredictorModel):
                             predictions_dict[b_name][load_type] = cl_p_LSTM[i]             
                 
                 predictions_dict['Solar_Generation'] = sg_total_LSTM
-                predictions_dict['Carbon_Intensity'] = cip_p_LSTM
+                predictions_dict['Carbon_Intensity'] = cip_p_GBM
 
         self.prev_vals = current_vals
         return predictions_dict
