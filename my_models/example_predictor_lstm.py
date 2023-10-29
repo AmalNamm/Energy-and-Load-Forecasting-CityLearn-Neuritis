@@ -112,27 +112,27 @@ class ExamplePredictorLSTM(BasePredictorModel):
         if 'BahdanauAttention' not in tf.keras.utils.get_custom_objects():
             register_keras_serializable('BahdanauAttention')(BahdanauAttention)
             
-        self.model_dhw_b1_LSTM = load_model('my_models/models/LSTM/dhw_demand_model_b1.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_dhw_b2_LSTM = load_model('my_models/models/LSTM/dhw_demand_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_dhw_b3_LSTM = load_model('my_models/models/LSTM/dhw_demand_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_dhw_b1_LSTM = load_model('my_models/models/LSTM_Bi_Model/dhw_demand_model_b1.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_dhw_b2_LSTM = load_model('my_models/models/LSTM_Bi_Model/dhw_demand_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_dhw_b3_LSTM = load_model('my_models/models/LSTM_Bi_Model/dhw_demand_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
         self.dhw_model_list_LSTM = [self.model_dhw_b1_LSTM,self.model_dhw_b2_LSTM,self.model_dhw_b3_LSTM]
         
-        self.model_sg_b1_LSTM = load_model('my_models/models/LSTM/solar_generation_model_b1.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_sg_b2_LSTM = load_model('my_models/models/LSTM/solar_generation_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_sg_b3_LSTM = load_model('my_models/models/LSTM/solar_generation_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_sg_b1_LSTM = load_model('my_models/models/LSTM_Bi_Model/solar_generation_model_b1.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_sg_b2_LSTM = load_model('my_models/models/LSTM_Bi_Model/solar_generation_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_sg_b3_LSTM = load_model('my_models/models/LSTM_Bi_Model/solar_generation_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
         self.sg_model_list_LSTM = [self.model_sg_b1_LSTM,self.model_sg_b2_LSTM,self.model_sg_b3_LSTM]
         
-        self.model_eep_b1_LSTM = load_model('my_models/models/LSTM/Equipment_Electric_Power_model_b1.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_eep_b2_LSTM = load_model('my_models/models/LSTM/Equipment_Electric_Power_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_eep_b3_LSTM = load_model('my_models/models/LSTM/Equipment_Electric_Power_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_eep_b1_LSTM = load_model('my_models/models/LSTM_Bi_Model/Equipment_Electric_Power_model_b1.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_eep_b2_LSTM = load_model('my_models/models/LSLSTM_Bi_ModelTM/Equipment_Electric_Power_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_eep_b3_LSTM = load_model('my_models/models/LSTM_Bi_Model/Equipment_Electric_Power_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
         self.eep_model_list_LSTM = [self.model_eep_b1_LSTM,self.model_eep_b2_LSTM,self.model_eep_b3_LSTM]
         
-        self.model_cl_b1_LSTM = load_model('my_models/models/LSTM/cooling_demand_model_b1.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_cl_b2_LSTM = load_model('my_models/models/LSTM/cooling_demand_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_cl_b3_LSTM = load_model('my_models/models/LSTM/cooling_demand_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_cl_b1_LSTM = load_model('my_models/models/LSTM_Bi_Model/cooling_demand_model_b1.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_cl_b2_LSTM = load_model('my_models/models/LSTM_Bi_Model/cooling_demand_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_cl_b3_LSTM = load_model('my_models/models/LSTM_Bi_Model/cooling_demand_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
         self.cl_model_list_LSTM = [self.model_cl_b1_LSTM,self.model_cl_b2_LSTM,self.model_cl_b3_LSTM]
         
