@@ -112,37 +112,27 @@ class ExamplePredictorLSTM(BasePredictorModel):
         if 'BahdanauAttention' not in tf.keras.utils.get_custom_objects():
             register_keras_serializable('BahdanauAttention')(BahdanauAttention)
             
-        self.model_dhw_b1_LSTM   = load_model('my_models/models/LSTM_Bi_Model/dhw_demand_model_b1_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_dhw_b2_LSTM   = load_model('my_models/models/LSTM_Bi_Model/dhw_demand_model_b2_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_dhw_b3_LSTM   = load_model('my_models/models/LSTM_Bi_Model/dhw_demand_model_b3_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_dhw_b1_LSTM   = load_model('my_models/models/LSTM_BiAttention/dhw_demand_model_b1.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_dhw_b2_LSTM   = load_model('my_models/models/LSTM_BiAttention/dhw_demand_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_dhw_b3_LSTM   = load_model('my_models/models/LSTM_BiAttention/dhw_demand_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
         self.dhw_model_list_LSTM = [self.model_dhw_b1_LSTM,self.model_dhw_b2_LSTM,self.model_dhw_b3_LSTM]
         
-        self.model_sg_b1_LSTM    = load_model('my_models/models/LSTM_Bi_Model/solar_generation_model_b1_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_sg_b2_LSTM    = load_model('my_models/models/LSTM_Bi_Model/solar_generation_model_b2_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_sg_b3_LSTM    = load_model('my_models/models/LSTM_Bi_Model/solar_generation_model_b3_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        
-        # Single Model for SG
-        self.model_sg_LSTM       = load_model('my_models/models/LSTM_BiAttention/solar_generation_model.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-
-        
-        
-        self.sg_model_list_LSTM  = [self.model_sg_b1_LSTM,self.model_sg_b2_LSTM,self.model_sg_b3_LSTM]
-        
-        self.model_eep_b1_LSTM   = load_model('my_models/models/LSTM_Bi_Model/Equipment_Electric_Power_model_b1_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_eep_b2_LSTM   = load_model('my_models/models/LSTM_Bi_Model/Equipment_Electric_Power_model_b2_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_eep_b3_LSTM   = load_model('my_models/models/LSTM_Bi_Model/Equipment_Electric_Power_model_b3_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_eep_b1_LSTM   = load_model('my_models/models/LSTM_BiAttention/Equipment_Electric_Power_model_b1.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_eep_b2_LSTM   = load_model('my_models/models/LSTM_BiAttention/Equipment_Electric_Power_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_eep_b3_LSTM   = load_model('my_models/models/LSTM_BiAttention/Equipment_Electric_Power_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
         self.eep_model_list_LSTM = [self.model_eep_b1_LSTM,self.model_eep_b2_LSTM,self.model_eep_b3_LSTM]
         
-        self.model_cl_b1_LSTM    = load_model('my_models/models/LSTM_Bi_Model/cooling_demand_model_b1_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_cl_b2_LSTM    = load_model('my_models/models/LSTM_Bi_Model/cooling_demand_model_b2_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_cl_b3_LSTM    = load_model('my_models/models/LSTM_Bi_Model/cooling_demand_model_b3_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_cl_b1_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b1.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_cl_b2_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_cl_b3_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
         self.cl_model_list_LSTM  = [self.model_cl_b1_LSTM,self.model_cl_b2_LSTM,self.model_cl_b3_LSTM]
         
-        self.model_cip_LSTM      = load_model('my_models/models/LSTM/Carbon_Intensity_model.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_cip_GBM       = joblib.load('my_models/models/fusion/LightGBM/Carbon_Intensity_model.pkl')
+        # Neighbour Level Models
+        self.model_cip_LSTM      = load_model('my_models/models/LSTM_BiAttention/Carbon_Intensity_model.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_sg_LSTM       = load_model('my_models/models/LSTM_BiAttention/solar_generation_model.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
     def compute_forecast(self, observations):
         
@@ -287,6 +277,7 @@ class ExamplePredictorLSTM(BasePredictorModel):
             b_dataframe.at[0,'occupant_count']                             = feature_values_global[19]
             b_dataframe.at[0,'net_electricity_consumption']                = feature_values_global[20]
             
+            
             # Change the df dimensions
             b_dataframe = b_dataframe.astype(float)
             b_dim_dataframe = np.reshape(b_dataframe.values, (b_dataframe.shape[0], 1, b_dataframe.shape[1]))
@@ -305,7 +296,6 @@ class ExamplePredictorLSTM(BasePredictorModel):
             building_dataframe.append(b_dataframe)
                 
                 
-        #sg_total_LSTM = np.sum(sg_p_LSTM, 0)
         
         # Concat the Building Dataframes
         comb_dataframe = pd.concat(building_dataframe)
@@ -314,7 +304,6 @@ class ExamplePredictorLSTM(BasePredictorModel):
         # Predict the neighbourhood values
         sg_p_LSTM     = self.model_sg_LSTM.predict(comb_dataframe)
         cip_p_LSTM    = self.model_cip_LSTM.predict(comb_dataframe)
-        cip_p_GBM     = self.model_cip_GBM.predict(b_dataframe)
 
         
         for i,b_name in enumerate(self.building_names):    
@@ -371,7 +360,7 @@ class ExamplePredictorLSTM(BasePredictorModel):
                             predictions_dict[b_name][load_type] = cl_p_LSTM[i]             
                 
                 predictions_dict['Solar_Generation'] = sg_p_LSTM
-                predictions_dict['Carbon_Intensity'] = cip_p_GBM
+                predictions_dict['Carbon_Intensity'] = cip_p_LSTM
 
         self.prev_vals = current_vals
         return predictions_dict

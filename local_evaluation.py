@@ -93,7 +93,6 @@ def evaluate(config):
                 'Carbon_Intensity': env.buildings[0].carbon_intensity.carbon_intensity[env.time_step+1:env.time_step+1+tau]
             }
             gt_length = len(ground_truth_vals['Carbon_Intensity']) # length of ground truth data
-
             forecast_scores = {
                 **{b.name: {
                     load_type: rmse(np.array(forecasts_dict[b.name][load_type])[:gt_length], np.array(ground_truth_vals[b.name][load_type]))

@@ -157,7 +157,9 @@ class XGBoost(BasePredictorModel):
 
             predictions_dict['Solar_Generation'] = np.poly1d(np.polyfit([-1,0],[self.prev_vals['Solar_Generation'],current_vals['Solar_Generation']],deg=1))(predict_inds)
             predictions_dict['Carbon_Intensity'] = np.poly1d(np.polyfit([-1,0],[self.prev_vals['Carbon_Intensity'],current_vals['Carbon_Intensity']],deg=1))(predict_inds)
-
+        
+        print("CURRENT VALS: ")
+        print(str(current_vals))
         self.prev_vals = current_vals
         # ====================================================================
         print(str(predictions_dict))
