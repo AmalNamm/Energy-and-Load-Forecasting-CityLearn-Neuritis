@@ -294,12 +294,10 @@ class ExamplePredictorLSTM(BasePredictorModel):
             # Forecast with the LSTM Models!
             if i > 2:
                 dhw_p_LSTM.append(self.dhw_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
-                #sg_p_LSTM.append(self.sg_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
                 eep_p_LSTM.append(self.eep_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
                 cl_p_LSTM.append(self.cl_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
             else: 
                 dhw_p_LSTM.append(self.dhw_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
-                #sg_p_LSTM.append(self.sg_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
                 eep_p_LSTM.append(self.eep_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
                 cl_p_LSTM.append(self.cl_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))  
                 
@@ -316,6 +314,8 @@ class ExamplePredictorLSTM(BasePredictorModel):
         # Predict the neighbourhood values
         sg_p_LSTM     = self.model_sg_LSTM.predict(comb_dataframe)
         cip_p_LSTM    = self.model_cip_LSTM.predict(comb_dataframe)
+        cip_p_GBM     = self.model_cip_GBM.predict(b_dataframe)
+
         
         for i,b_name in enumerate(self.building_names):    
             dhw_p_LSTM[i] = dhw_p_LSTM[i].reshape(-1)
@@ -371,7 +371,7 @@ class ExamplePredictorLSTM(BasePredictorModel):
                             predictions_dict[b_name][load_type] = cl_p_LSTM[i]             
                 
                 predictions_dict['Solar_Generation'] = sg_p_LSTM
-                predictions_dict['Carbon_Intensity'] = cip_p_LSTM
+                predictions_dict['Carbon_Intensity'] = cip_p_GBM
 
         self.prev_vals = current_vals
         return predictions_dict
