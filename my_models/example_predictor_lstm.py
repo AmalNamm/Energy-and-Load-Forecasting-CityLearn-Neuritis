@@ -132,8 +132,8 @@ class ExamplePredictorLSTM(BasePredictorModel):
         self.eep_model_list_LSTM = [self.model_eep_b1_LSTM,self.model_eep_b2_LSTM,self.model_eep_b3_LSTM]
         
         self.model_cl_b1_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b1_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_cl_b2_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_cl_b3_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_cl_b2_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b2_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_cl_b3_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b3_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
         self.cl_model_list_LSTM  = [self.model_cl_b1_LSTM,self.model_cl_b2_LSTM,self.model_cl_b3_LSTM]
         

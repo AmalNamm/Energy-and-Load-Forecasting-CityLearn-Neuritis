@@ -132,15 +132,11 @@ class ExamplePredictorFusion(BasePredictorModel):
     def load(self):
 
         # Fusion Models
-        
         self.model_dhw_b1_GBM = joblib.load('my_models/models/LightGBM/dhw_demand_model_b1.pkl')
         self.model_dhw_b2_GBM = joblib.load('my_models/models/LightGBM/dhw_demand_model_b2.pkl')
         self.model_dhw_b3_GBM = joblib.load('my_models/models/LightGBM/dhw_demand_model_b3.pkl')
         
         self.dhw_model_list_GBM = [self.model_dhw_b1_GBM,self.model_dhw_b2_GBM,self.model_dhw_b3_GBM]
-        
-      
-        self.model_sg_b1_GBM  = joblib.load('my_models/models/LightGBM/solar_generation_model.pkl')
         
         self.model_eep_b1_GBM = joblib.load('my_models/models/LightGBM/Equipment_Electric_Power_model_b1.pkl')
         self.model_eep_b2_GBM = joblib.load('my_models/models/LightGBM/Equipment_Electric_Power_model_b2.pkl')
@@ -155,7 +151,7 @@ class ExamplePredictorFusion(BasePredictorModel):
         self.cl_model_list_GBM = [self.model_cl_b1_GBM,self.model_cl_b2_GBM,self.model_cl_b3_GBM]
         
         self.model_cip_GBM    = joblib.load('my_models/models/LightGBM/Carbon_Intensity_Power_model.pkl')
-        
+        self.model_sg_GBM  = joblib.load('my_models/models/LightGBM/solar_generation_model.pkl')
         
         
         # LSTM Models
@@ -167,11 +163,6 @@ class ExamplePredictorFusion(BasePredictorModel):
         self.model_dhw_b3_LSTM   = load_model('my_models/models/LSTM_BiAttention/dhw_demand_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
         self.dhw_model_list_LSTM = [self.model_dhw_b1_LSTM,self.model_dhw_b2_LSTM,self.model_dhw_b3_LSTM]
-        
-        
-        # Single Model for SG
-        self.model_sg_LSTM       = load_model('my_models/models/LSTM_BiAttention/solar_generation_model.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-
                 
         self.model_eep_b1_LSTM   = load_model('my_models/models/LSTM_BiAttention/Equipment_Electric_Power_model_b1.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         self.model_eep_b2_LSTM   = load_model('my_models/models/LSTM_BiAttention/Equipment_Electric_Power_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
@@ -186,6 +177,7 @@ class ExamplePredictorFusion(BasePredictorModel):
         self.cl_model_list_LSTM  = [self.model_cl_b1_LSTM,self.model_cl_b2_LSTM,self.model_cl_b3_LSTM]
         
         self.model_cip_LSTM      = load_model('my_models/models/LSTM_BiAttention/Carbon_Intensity_model.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_sg_LSTM       = load_model('my_models/models/LSTM_BiAttention/solar_generation_model.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
     def compute_forecast(self, observations):
 
@@ -213,13 +205,11 @@ class ExamplePredictorFusion(BasePredictorModel):
         
         
         dhw_p_GBM = []
-        sg_p_GBM  = []
         eep_p_GBM = []
         cl_p_GBM  = []
         
         
         dhw_p_LSTM = []
-        sg_p_LSTM  = []
         eep_p_LSTM = []
         cl_p_LSTM  = []
                        
@@ -363,10 +353,7 @@ class ExamplePredictorFusion(BasePredictorModel):
             # Combine the dfs
             building_dataframe.append(b_dataframe)
         
-        
-        
-        
-        
+
         
         # Concat the Building Dataframes
         comb_dataframe = pd.concat(building_dataframe)
