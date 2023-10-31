@@ -26,3 +26,14 @@ my_models/models/LightGBM/cooling_demand_model_b3.pkl filter=lfs diff=lfs merge=
 my_models/models/LightGBM/dhw_demand_model_b1.pkl filter=lfs diff=lfs merge=lfs -text
 my_models/models/LightGBM/dhw_demand_model_b2.pkl filter=lfs diff=lfs merge=lfs -text
 my_models/models/LightGBM/dhw_demand_model_b3.pkl filter=lfs diff=lfs merge=lfs -text
+my_models/models/LightGBM/dhw_demand_model_b1.h5 filter=lfs diff=lfs merge=lfs -text
+my_models/models/LightGBM/dhw_demand_model_b2.h5 filter=lfs diff=lfs merge=lfs -text
+my_models/models/LightGBM/dhw_demand_model_b3.h5 filter=lfs diff=lfs merge=lfs -text
+my_models/models/LightGBM/Equipment_Electric_Power_model_b1.h5 filter=lfs diff=lfs merge=lfs -text
+my_models/models/LightGBM/Equipment_Electric_Power_model_b2.h5 filter=lfs diff=lfs merge=lfs -text
+my_models/models/LightGBM/Equipment_Electric_Power_model_b3.h5 filter=lfs diff=lfs merge=lfs -text
+my_models/models/LightGBM/Carbon_Intensity_Power_model.h5 filter=lfs diff=lfs merge=lfs -text
+my_models/models/LightGBM/solar_generation_model.h5 filter=lfs diff=lfs merge=lfs -text
+my_models/models/LightGBM/cooling_demand_model_b1.h5 filter=lfs diff=lfs merge=lfs -text
+my_models/models/LightGBM/cooling_demand_model_b2.h5 filter=lfs diff=lfs merge=lfs -text
+my_models/models/LightGBM/cooling_demand_model_b3.h5 filter=lfs diff=lfs merge=lfs -text
