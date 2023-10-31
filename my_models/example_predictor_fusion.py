@@ -27,6 +27,9 @@ from sklearn.metrics import mean_pinball_loss
 from sklearn.model_selection import train_test_split
 import matplotlib.ticker as ticker
 import re
+from skforecast.utils import save_forecaster
+from skforecast.utils import load_forecaster
+
 
 from my_models.base_predictor_model import BasePredictorModel
 
@@ -132,26 +135,27 @@ class ExamplePredictorFusion(BasePredictorModel):
     def load(self):
 
         # Fusion Models
-        self.model_dhw_b1_GBM = joblib.load('my_models/models/LightGBM/dhw_demand_model_b1.pkl')
-        self.model_dhw_b2_GBM = joblib.load('my_models/models/LightGBM/dhw_demand_model_b2.pkl')
-        self.model_dhw_b3_GBM = joblib.load('my_models/models/LightGBM/dhw_demand_model_b3.pkl')
+        self.model_dhw_b1_GBM = load_forecaster('my_models/models/LightGBM/dhw_demand_model_b1.h5', verbose=False)
+        self.model_dhw_b2_GBM = load_forecaster('my_models/models/LightGBM/dhw_demand_model_b2.h5', verbose=False)
+        self.model_dhw_b3_GBM = load_forecaster('my_models/models/LightGBM/dhw_demand_model_b3.h5', verbose=False)
         
         self.dhw_model_list_GBM = [self.model_dhw_b1_GBM,self.model_dhw_b2_GBM,self.model_dhw_b3_GBM]
         
-        self.model_eep_b1_GBM = joblib.load('my_models/models/LightGBM/Equipment_Electric_Power_model_b1.pkl')
-        self.model_eep_b2_GBM = joblib.load('my_models/models/LightGBM/Equipment_Electric_Power_model_b2.pkl')
-        self.model_eep_b3_GBM = joblib.load('my_models/models/LightGBM/Equipment_Electric_Power_model_b3.pkl')
+        self.model_eep_b1_GBM = load_forecaster('my_models/models/LightGBM/Equipment_Electric_Power_model_b1.h5', verbose=False)
+        self.model_eep_b2_GBM = load_forecaster('my_models/models/LightGBM/Equipment_Electric_Power_model_b2.h5', verbose=False)
+        self.model_eep_b3_GBM = load_forecaster('my_models/models/LightGBM/Equipment_Electric_Power_model_b3.h5', verbose=False)
         
         self.eep_model_list_GBM = [self.model_eep_b1_GBM,self.model_eep_b2_GBM,self.model_eep_b3_GBM]
         
-        self.model_cl_b1_GBM  = joblib.load('my_models/models/LightGBM/cooling_demand_model_b1.pkl')
-        self.model_cl_b2_GBM  = joblib.load('my_models/models/LightGBM/cooling_demand_model_b2.pkl')
-        self.model_cl_b3_GBM  = joblib.load('my_models/models/LightGBM/cooling_demand_model_b3.pkl')
+        
+        self.model_cl_b1_GBM  = load_forecaster('my_models/models/LightGBM/cooling_demand_model_b1.h5', verbose=False)
+        self.model_cl_b2_GBM  = load_forecaster('my_models/models/LightGBM/cooling_demand_model_b2.h5', verbose=False)
+        self.model_cl_b3_GBM  = load_forecaster('my_models/models/LightGBM/cooling_demand_model_b3.h5', verbose=False)
         
         self.cl_model_list_GBM = [self.model_cl_b1_GBM,self.model_cl_b2_GBM,self.model_cl_b3_GBM]
         
-        self.model_cip_GBM    = joblib.load('my_models/models/LightGBM/Carbon_Intensity_Power_model.pkl')
-        self.model_sg_GBM  = joblib.load('my_models/models/LightGBM/solar_generation_model.pkl')
+        self.model_cip_GBM    = load_forecaster('my_models/models/LightGBM/Carbon_Intensity_Power_model.h5', verbose=False)
+        self.model_sg_GBM     = load_forecaster('my_models/models/LightGBM/solar_generation_model.h5', verbose=False)
         
         
         # LSTM Models
@@ -170,9 +174,9 @@ class ExamplePredictorFusion(BasePredictorModel):
         
         self.eep_model_list_LSTM = [self.model_eep_b1_LSTM,self.model_eep_b2_LSTM,self.model_eep_b3_LSTM]
         
-        self.model_cl_b1_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b1.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_cl_b2_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_cl_b3_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_cl_b1_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b1_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_cl_b2_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b2_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_cl_b3_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b3_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
         self.cl_model_list_LSTM  = [self.model_cl_b1_LSTM,self.model_cl_b2_LSTM,self.model_cl_b3_LSTM]
         
@@ -339,16 +343,18 @@ class ExamplePredictorFusion(BasePredictorModel):
                 eep_p_LSTM.append(self.eep_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
                 cl_p_LSTM.append(self.cl_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0)) 
                 
+            
             # Forecast with the LightGBM Models!
+            # Example: predictions_demand = forecaster.predict(steps=steps, level='Demand')
+            steps = 48
             if i > 2:
-                dhw_p_GBM.append(self.dhw_model_list_GBM[i-i].predict(fh = fh))
-                eep_p_GBM.append(self.eep_model_list_GBM[i-i].predict(b_dim_dataframe))
-                cl_p_GBM.append(self.cl_model_list_GBM[i-i].predict(b_dim_dataframe))
+                dhw_p_GBM.append(self.dhw_model_list_GBM[i-i].predict(steps=48,levels=b_dataframe['dhw_demand']))
+                eep_p_GBM.append(self.eep_model_list_GBM[i-i].predict(steps=48,levels=b_dataframe['non_shiftable_load']))
+                cl_p_GBM.append(self.cl_model_list_GBM[i-i].predict(steps=48,levels=b_dataframe['cooling_demand']))
             else: 
-                dhw_p_GBM.append(self.dhw_model_list_GBM[i].predict(fh = fh))
-                print("GBM RESULTS:   "+str(self.dhw_model_list_GBM[i].predict(b_dim_dataframes)))
-                eep_p_GBM.append(self.eep_model_list_GBM[i].predict(b_dataframe))
-                cl_p_GBM.append(self.cl_model_list_GBM[i].predict(b_dataframe))
+                dhw_p_GBM.append(self.dhw_model_list_GBM[i].predict(steps=48,levels=b_dataframe['dhw_demand']))
+                eep_p_GBM.append(self.eep_model_list_GBM[i].predict(steps=48,levels=b_dataframe['non_shiftable_load']))
+                cl_p_GBM.append(self.cl_model_list_GBM[i].predict(steps=48,levels=b_dataframe['cooling_demand']))
                 
             # Combine the dfs
             building_dataframe.append(b_dataframe)
@@ -357,37 +363,55 @@ class ExamplePredictorFusion(BasePredictorModel):
         
         # Concat the Building Dataframes
         comb_dataframe = pd.concat(building_dataframe)
-        comb_dataframe = np.reshape(comb_dataframe.values, (comb_dataframe.shape[0], 1, comb_dataframe.shape[1]))
+        comb_dataframe_lstm = np.reshape(comb_dataframe.values, (comb_dataframe.shape[0], 1, comb_dataframe.shape[1]))
         
         # Predict the neighbourhood values
-        sg_p_LSTM     = self.model_sg_LSTM.predict(comb_dataframe)
-        sg_p_GBM      = self.model_sg_GBM.predict(comb_dataframe)
-        cip_p_LSTM    = self.model_cip_LSTM.predict(comb_dataframe)
-        cip_p_GBM     = self.model_cip_GBM.predict(comb_dataframe)
+        sg_p_LSTM     = self.model_sg_LSTM.predict(comb_dataframe_lstm)
+        cip_p_LSTM    = self.model_cip_LSTM.predict(comb_dataframe_lstm)
+        
+        sg_p_GBM      = self.model_sg_GBM.predict(steps=48,levels=comb_dataframe['solar_generation'])
+        cip_p_GBM     = self.model_cip_GBM.predict(steps=48,levels=comb_dataframe['carbon_intensity'])
         
         
-        
+        # Change the dimensions of the GBM outputs
+        dhw_p_GBM_list = []
+        eep_p_GBM_list = []
+        cl_p_GBM_list  = []
+        sg_p_GBM_list  = []
+        cip_p_GBM_list = []
+            
+        for item in dhw_p_GBM:
+            dhw_p_GBM_arr = np.array(item, dtype='float32')
+            dhw_p_GBM_arr = dhw_p_GBM_arr.reshape(48,1)
+            dhw_p_GBM_list.append(dhw_p_GBM_arr)
+            
+        for item in eep_p_GBM:
+            eep_p_GBM_arr = np.array(item, dtype='float32')
+            eep_p_GBM_arr = eep_p_GBM_arr.reshape(48,1)
+            eep_p_GBM_list.append(eep_p_GBM_arr)
+            
+        for item in cl_p_GBM:
+            cl_p_GBM_arr = np.array(item, dtype='float32')
+            cl_p_GBM_arr = cl_p_GBM_arr.reshape(48,1)
+            cl_p_GBM_list.append(cl_p_GBM_arr)
+            
+                    
         # Ensamble the predictions
         e_dhw  = []
         e_eep  = []
         e_cl   = []
         
-        for lstm,gbm in zip(dhw_p_LSTM, dhw_p_GBM):
+        for lstm,gbm in zip(dhw_p_LSTM, dhw_p_GBM_list):
             e_dhw.append((lstm + gbm) / 2)
      
-        for lstm,gbm in zip(eep_p_LSTM, eep_p_GBM):
+        for lstm,gbm in zip(eep_p_LSTM, eep_p_GBM_list):
             e_eep.append((lstm + gbm) / 2)
 
-        for lstm,gbm in zip(cl_p_LSTM, cl_p_GBM):
+        for lstm,gbm in zip(cl_p_LSTM, cl_p_GBM_list):
             e_cl.append((lstm + gbm) / 2)
             
-            
-        #sg_total_LSTM = sg_p_LSTM.reshape(-1)
-        e_sg_t  = (sg_p_LSTM + sg_p_GBM) / 2
-        e_cip_t = (cip_p_LSTM + cip_p_GBM) / 2
-
-        
-        
+    
+    
         for i,b_name in enumerate(self.building_names):    
             e_dhw[i] = e_dhw[i].reshape(-1)
             e_eep[i] = e_eep[i].reshape(-1)
@@ -439,8 +463,8 @@ class ExamplePredictorFusion(BasePredictorModel):
                         if load_type == 'Cooling_Load':
                             predictions_dict[b_name][load_type] = e_cl[i]             
                 
-                predictions_dict['Solar_Generation'] = e_sg_t
-                predictions_dict['Carbon_Intensity'] = cip_p_GBM
+                predictions_dict['Solar_Generation'] = sg_p_LSTM[0]
+                predictions_dict['Carbon_Intensity'] = cip_p_LSTM[0]
 
         self.prev_vals = current_vals
         return predictions_dict
