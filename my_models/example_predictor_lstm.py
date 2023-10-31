@@ -86,7 +86,12 @@ class ExamplePredictorLSTM(BasePredictorModel):
         self.observation_names = env_data['observation_names']
         self.action_names = env_data['action_names']
         self.tau = tau
-
+        
+        # Check if I can get stuff from the Evaluation
+        print("Number of Buildings in the System: "+str(self.num_buildings))
+        print("Features in the Observations: "+str(self.observation_names))
+        print("Action Names: "+str(self.action_names))
+        
         # Load in pre-computed prediction model.
         self.load()
 
@@ -108,6 +113,8 @@ class ExamplePredictorLSTM(BasePredictorModel):
     # Here I have to load the Prediction Model!
     def load(self):
         
+        print("Loading the ML Models!")
+        
         # LSTM Models
         if 'BahdanauAttention' not in tf.keras.utils.get_custom_objects():
             register_keras_serializable('BahdanauAttention')(BahdanauAttention)
@@ -124,7 +131,7 @@ class ExamplePredictorLSTM(BasePredictorModel):
         
         self.eep_model_list_LSTM = [self.model_eep_b1_LSTM,self.model_eep_b2_LSTM,self.model_eep_b3_LSTM]
         
-        self.model_cl_b1_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b1.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_cl_b1_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b1_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         self.model_cl_b2_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b2.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         self.model_cl_b3_LSTM    = load_model('my_models/models/LSTM_BiAttention/cooling_demand_model_b3.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
@@ -135,6 +142,10 @@ class ExamplePredictorLSTM(BasePredictorModel):
         self.model_sg_LSTM       = load_model('my_models/models/LSTM_BiAttention/solar_generation_model.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
     def compute_forecast(self, observations):
+        
+        print("Length of the Observations: " + str(len(observations)))
+        print("Type of the Observations: " + str(type(observations)))
+        print(str(observations))
         
         # Save the values, which are at the beginning in lists and static for each building
         feature_names_global  = ['day_type', 'hour', 'outdoor_dry_bulb_temperature', 'outdoor_dry_bulb_temperature_predicted_6h',  
@@ -302,8 +313,8 @@ class ExamplePredictorLSTM(BasePredictorModel):
         comb_dataframe = np.reshape(comb_dataframe.values, (comb_dataframe.shape[0], 1, comb_dataframe.shape[1]))
         
         # Predict the neighbourhood values
-        sg_p_LSTM     = self.model_sg_LSTM.predict(comb_dataframe)
-        cip_p_LSTM    = self.model_cip_LSTM.predict(comb_dataframe)
+        sg_p_LSTM     = self.model_sg_LSTM.predict(comb_dataframe, verbose=0)
+        cip_p_LSTM    = self.model_cip_LSTM.predict(comb_dataframe, verbose=0)
 
         
         for i,b_name in enumerate(self.building_names):    
