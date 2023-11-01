@@ -27,8 +27,8 @@ from sklearn.metrics import mean_pinball_loss
 from sklearn.model_selection import train_test_split
 import matplotlib.ticker as ticker
 import re
-from skforecast.utils import save_forecaster
-from skforecast.utils import load_forecaster
+from skforecast.ForecasterAutoregMultiVariate import ForecasterAutoregMultiVariate
+
 
 
 from my_models.base_predictor_model import BasePredictorModel
