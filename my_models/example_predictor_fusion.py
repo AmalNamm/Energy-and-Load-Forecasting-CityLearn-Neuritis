@@ -27,9 +27,7 @@ from sklearn.metrics import mean_pinball_loss
 from sklearn.model_selection import train_test_split
 import matplotlib.ticker as ticker
 import re
-from skforecast.ForecasterAutoregMultiVariate import ForecasterAutoregMultiVariate
-
-
+from skforecast.ForecasterAutoreg import ForecasterAutoreg
 
 from my_models.base_predictor_model import BasePredictorModel
 
@@ -72,6 +70,17 @@ class BahdanauAttention(Layer):
 
 class ExamplePredictorFusion(BasePredictorModel):
 
+    
+    
+    
+    def load_forecaster(file_name: str
+    ) -> object:
+
+        forecaster = joblib.load(filename=file_name)
+        return forecaster
+    
+    
+    
     
     def shape(lst):
         length = len(lst)
@@ -130,12 +139,12 @@ class ExamplePredictorFusion(BasePredictorModel):
         }
         self.b0_pv_capacity = env_data['b0_pv_capacity']
         # ====================================================================
-
+        
     # Here I have to load the Prediction Model!
     def load(self):
 
         # Fusion Models
-        self.model_dhw_b1_GBM = load_forecaster('my_models/models/LightGBM/dhw_demand_model_b1.h5', verbose=False)
+        self.model_dhw_b1_GBM = joblib.load('my_models/models/LightGBM/dhw_demand_model_b1.h5')
         self.model_dhw_b2_GBM = load_forecaster('my_models/models/LightGBM/dhw_demand_model_b2.h5', verbose=False)
         self.model_dhw_b3_GBM = load_forecaster('my_models/models/LightGBM/dhw_demand_model_b3.h5', verbose=False)
         
@@ -346,15 +355,24 @@ class ExamplePredictorFusion(BasePredictorModel):
             
             # Forecast with the LightGBM Models!
             # Example: predictions_demand = forecaster.predict(steps=steps, level='Demand')
-            steps = 48
-            if i > 2:
-                dhw_p_GBM.append(self.dhw_model_list_GBM[i-i].predict(steps=48,levels=b_dataframe['dhw_demand']))
-                eep_p_GBM.append(self.eep_model_list_GBM[i-i].predict(steps=48,levels=b_dataframe['non_shiftable_load']))
-                cl_p_GBM.append(self.cl_model_list_GBM[i-i].predict(steps=48,levels=b_dataframe['cooling_demand']))
-            else: 
-                dhw_p_GBM.append(self.dhw_model_list_GBM[i].predict(steps=48,levels=b_dataframe['dhw_demand']))
-                eep_p_GBM.append(self.eep_model_list_GBM[i].predict(steps=48,levels=b_dataframe['non_shiftable_load']))
-                cl_p_GBM.append(self.cl_model_list_GBM[i].predict(steps=48,levels=b_dataframe['cooling_demand']))
+            #steps = 48
+            #if i > 2:
+            #    dhw_p_GBM.append(self.dhw_model_list_GBM[i-i].predict(steps=48,levels=b_dataframe['dhw_demand']))
+            #    eep_p_GBM.append(self.eep_model_list_GBM[i-i].predict(steps=48,levels=b_dataframe['non_shiftable_load']))
+            #    cl_p_GBM.append(self.cl_model_list_GBM[i-i].predict(steps=48,levels=b_dataframe['cooling_demand']))
+            #else: 
+            #    dhw_p_GBM.append(self.dhw_model_list_GBM[i].predict(steps=48,levels=b_dataframe['dhw_demand']))
+            #    eep_p_GBM.append(self.eep_model_list_GBM[i].predict(steps=48,levels=b_dataframe['non_shiftable_load']))
+            #    cl_p_GBM.append(self.cl_model_list_GBM[i].predict(steps=48,levels=b_dataframe['cooling_demand']))
+             
+                
+               
+                
+                
+                
+                
+                
+                
                 
             # Combine the dfs
             building_dataframe.append(b_dataframe)
