@@ -293,15 +293,34 @@ class ExamplePredictorLSTM(BasePredictorModel):
             b_dataframe = b_dataframe.astype(float)
             b_dim_dataframe = np.reshape(b_dataframe.values, (b_dataframe.shape[0], 1, b_dataframe.shape[1]))
             
+            
+            dhw_list = []
+            eep_list = []
+            cl_list  = []
+            
+            # Make the prediction for each building dynamically (Maybe Ensamble of them?)
+            for dhw_model,eep_model,cl_model in zip(self.dhw_model_list_LSTM,self.eep_model_list_LSTM,self.cl_model_list_LSTM):
+                dhw_list.append(dhw_model.predict(b_dim_dataframe, verbose=0))
+                eep_list.append(eep_model.predict(b_dim_dataframe, verbose=0))
+                cl_list.append(cl_model.predict(b_dim_dataframe, verbose=0))
+                
+                
+            
+            # Make the Ensamble of the Models!
+            dhw_p_LSTM.append((dhw_list[0] + dhw_list[1] + dhw_list[2]) / 3)
+            eep_p_LSTM.append((eep_list[0] + eep_list[1] + eep_list[2]) / 3)
+            cl_p_LSTM.append((cl_list[0] + cl_list[1] + cl_list[2]) / 3)
+            
+            
             # Forecast with the LSTM Models!
-            if i > 2:
-                dhw_p_LSTM.append(self.dhw_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
-                eep_p_LSTM.append(self.eep_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
-                cl_p_LSTM.append(self.cl_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
-            else: 
-                dhw_p_LSTM.append(self.dhw_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
-                eep_p_LSTM.append(self.eep_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
-                cl_p_LSTM.append(self.cl_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))  
+            #if i > 2:
+            #    dhw_p_LSTM.append(self.dhw_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
+            #    eep_p_LSTM.append(self.eep_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
+            #    cl_p_LSTM.append(self.cl_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
+            #else: 
+            #    dhw_p_LSTM.append(self.dhw_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
+            #    eep_p_LSTM.append(self.eep_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
+            #    cl_p_LSTM.append(self.cl_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))  
                 
             # Combine the dfs
             building_dataframe.append(b_dataframe)
@@ -372,7 +391,6 @@ class ExamplePredictorLSTM(BasePredictorModel):
                 
                 predictions_dict['Solar_Generation'] = sg_p_LSTM
                 predictions_dict['Carbon_Intensity'] = cip_p_LSTM
-
         self.prev_vals = current_vals
         return predictions_dict
     

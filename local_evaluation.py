@@ -56,7 +56,6 @@ def create_citylearn_env(config):
     for b in env.buildings:
         b.ignore_dynamics = True
         b.simulate_power_outage = False
-
     return env, env_data
 
 
