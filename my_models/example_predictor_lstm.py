@@ -138,8 +138,8 @@ class ExamplePredictorLSTM(BasePredictorModel):
         self.cl_model_list_LSTM  = [self.model_cl_b1_LSTM,self.model_cl_b2_LSTM,self.model_cl_b3_LSTM]
         
         # Neighbour Level Models
-        self.model_cip_LSTM      = load_model('my_models/models/LSTM_BiAttention/Carbon_Intensity_model.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
-        self.model_sg_LSTM       = load_model('my_models/models/LSTM_BiAttention/solar_generation_model.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_cip_LSTM      = load_model('my_models/models/LSTM_BiAttention/Carbon_Intensity_model_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
+        self.model_sg_LSTM       = load_model('my_models/models/LSTM_BiAttention/solar_generation_model_hyper.h5', custom_objects={'BahdanauAttention': BahdanauAttention})
         
     def compute_forecast(self, observations):
         
