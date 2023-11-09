@@ -32,7 +32,6 @@ dependencies:
       - click==7.1.2
       - cloudpickle==2.2.1
       - colorama==0.4.6
-      - skforecast
       - commonmark==0.9.1
       - cycler==0.11.0
       - fonttools==4.38.0
