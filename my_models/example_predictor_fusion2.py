@@ -378,12 +378,12 @@ class ExamplePredictorFusion2(BasePredictorModel):
                 #----------------------------------------------------------------------------------------------------------
                 # Forecaster with Lags!
                 # DHW
-                dhw_local = b_dataframe
-                for j in range(1, self.steps + 1):
-                    dhw_local[f'lag_{j}'] = self.memory_dhw[i][j-1]
-                    
-                scaler = StandardScaler()
-                latest_features_scaled_dhw = scaler.fit_transform(dhw_local.values.reshape(1, -1))
+                #dhw_local = b_dataframe
+                #for j in range(1, self.steps + 1):
+                #    dhw_local[f'lag_{j}'] = self.memory_dhw[i][j-1]
+                #    
+                #scaler = StandardScaler()
+                #latest_features_scaled_dhw = scaler.fit_transform(dhw_local.values.reshape(1, -1))
                 
                 # EEP
                 eep_local = b_dataframe
@@ -402,15 +402,15 @@ class ExamplePredictorFusion2(BasePredictorModel):
                 latest_features_scaled_cl = scaler.fit_transform(cl_local.values.reshape(1, -1))
                 
                 # DHW
-                for _ in range(self.steps):
-                    if i > 2: 
-                        dhw = self.dhw_model_list_GBM[i-i].predict(latest_features_scaled_dhw)[0]
-                    else:
-                        dhw = self.dhw_model_list_GBM[i].predict(latest_features_scaled_dhw)[0]
-                        
-                    latest_features_scaled_dhw = np.roll(latest_features_scaled_dhw, -1)
-                    latest_features_scaled_dhw[0, -1] = dhw
-                    l_dhw.append(dhw)
+                #for _ in range(self.steps):
+                #    if i > 2: 
+                #        dhw = self.dhw_model_list_GBM[i-i].predict(latest_features_scaled_dhw)[0]
+                #    else:
+                #        dhw = self.dhw_model_list_GBM[i].predict(latest_features_scaled_dhw)[0]
+                #        
+                #    latest_features_scaled_dhw = np.roll(latest_features_scaled_dhw, -1)
+                #    latest_features_scaled_dhw[0, -1] = dhw
+                #    l_dhw.append(dhw)
 
                 # EEP
                 for _ in range(self.steps):
@@ -441,12 +441,12 @@ class ExamplePredictorFusion2(BasePredictorModel):
             else:
                 
                 # DHW
-                for _ in range(self.steps):
-                    if i > 2: 
-                        dhw = self.dhw_model_list_GBM_wo[i-i].predict(latest_features_scaled)
-                    else:
-                        dhw = self.dhw_model_list_GBM_wo[i].predict(latest_features_scaled)
-                    l_dhw.append(dhw)
+                #for _ in range(self.steps):
+                #    if i > 2: 
+                #        dhw = self.dhw_model_list_GBM_wo[i-i].predict(latest_features_scaled)
+                #    else:
+                #        dhw = self.dhw_model_list_GBM_wo[i].predict(latest_features_scaled)
+                #    l_dhw.append(dhw)
 
                 # EEP
                 for _ in range(self.steps):
@@ -475,11 +475,7 @@ class ExamplePredictorFusion2(BasePredictorModel):
                     dhw_p_LSTM.append(self.dhw_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
                     eep_p_LSTM.append(self.eep_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
                     cl_p_LSTM.append(self.cl_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
-                    
-                    
-                    
-                    
-                    
+
             #----------------------------------------------------------------------------------------------------------
             # Here we made the predictions etc for one building and we save the results / information of each building
             # in the following global lists
@@ -573,8 +569,8 @@ class ExamplePredictorFusion2(BasePredictorModel):
         e_eep  = []
         e_cl   = []
         
-        for lstm,gbm in zip(dhw_p_LSTM, dhw_p_GBM):
-            e_dhw.append((lstm + gbm) / 2)
+        #for lstm,gbm in zip(dhw_p_LSTM, dhw_p_GBM):
+        #    e_dhw.append((lstm + gbm) / 2)
      
         for lstm,gbm in zip(eep_p_LSTM, eep_p_GBM):
             e_eep.append((lstm + gbm) / 2)
@@ -626,7 +622,7 @@ class ExamplePredictorFusion2(BasePredictorModel):
                             predictions_dict[b_name][load_type] = e_eep[i]
                             
                         if load_type == 'DHW_Heating':
-                            predictions_dict[b_name][load_type] = e_dhw[i]
+                            predictions_dict[b_name][load_type] = dhw_p_LSTM[i]#e_dhw[i]
                             
                         if load_type == 'Cooling_Load':
                             predictions_dict[b_name][load_type] = e_cl[i]            
