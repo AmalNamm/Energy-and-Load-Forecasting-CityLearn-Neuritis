@@ -470,11 +470,11 @@ class ExamplePredictorFusion2(BasePredictorModel):
             if i > 2:
                     dhw_p_LSTM.append(self.dhw_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
                     eep_p_LSTM.append(self.eep_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
-                    cl_p_LSTM.append(self.cl_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
+                    #cl_p_LSTM.append(self.cl_model_list_LSTM[i-i].predict(b_dim_dataframe, verbose=0))
             else: 
                     dhw_p_LSTM.append(self.dhw_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
                     eep_p_LSTM.append(self.eep_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
-                    cl_p_LSTM.append(self.cl_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
+                    #cl_p_LSTM.append(self.cl_model_list_LSTM[i].predict(b_dim_dataframe, verbose=0))
 
             #----------------------------------------------------------------------------------------------------------
             # Here we made the predictions etc for one building and we save the results / information of each building
@@ -575,8 +575,8 @@ class ExamplePredictorFusion2(BasePredictorModel):
         for lstm,gbm in zip(eep_p_LSTM, eep_p_GBM):
             e_eep.append((lstm + gbm) / 2)
 
-        for lstm,gbm in zip(cl_p_LSTM, cl_p_GBM):
-            e_cl.append((lstm + gbm) / 2)
+        #for lstm,gbm in zip(cl_p_LSTM, cl_p_GBM):
+        #    e_cl.append((lstm + gbm) / 2)
         
         #----------------------------------------------------------------------------------------------------------
         # Dictionary of the current values
@@ -625,7 +625,7 @@ class ExamplePredictorFusion2(BasePredictorModel):
                             predictions_dict[b_name][load_type] = dhw_p_LSTM[i]#e_dhw[i]
                             
                         if load_type == 'Cooling_Load':
-                            predictions_dict[b_name][load_type] = e_cl[i]            
+                            predictions_dict[b_name][load_type] = cl_p_GBM[i]#e_cl[i]            
                 
                 predictions_dict['Solar_Generation'] = sg_p_GBM
                 predictions_dict['Carbon_Intensity'] = cip_p_GBM
