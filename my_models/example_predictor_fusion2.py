@@ -135,22 +135,22 @@ class ExamplePredictorFusion2(BasePredictorModel):
     def load(self):
 
         # LGB Models (with lags!)
-        self.model_dhw_b1_GBM = joblib.load('my_models/models/LightGBM/dhw_demand_model_b1.h5')
-        self.model_dhw_b2_GBM = joblib.load('my_models/models/LightGBM/dhw_demand_model_b2.h5')
-        self.model_dhw_b3_GBM = joblib.load('my_models/models/LightGBM/dhw_demand_model_b3.h5')
+        self.model_dhw_b1_GBM = joblib.load('my_models/models/LightGBM/dhw_demand_model_b1_hyper.h5')
+        self.model_dhw_b2_GBM = joblib.load('my_models/models/LightGBM/dhw_demand_model_b2_hyper.h5')
+        self.model_dhw_b3_GBM = joblib.load('my_models/models/LightGBM/dhw_demand_model_b3_hyper.h5')
         
         self.dhw_model_list_GBM = [self.model_dhw_b1_GBM,self.model_dhw_b2_GBM,self.model_dhw_b3_GBM]
         
-        self.model_eep_b1_GBM = joblib.load('my_models/models/LightGBM/Equipment_Electric_Power_model_b1.h5')
-        self.model_eep_b2_GBM = joblib.load('my_models/models/LightGBM/Equipment_Electric_Power_model_b2.h5')
-        self.model_eep_b3_GBM = joblib.load('my_models/models/LightGBM/Equipment_Electric_Power_model_b3.h5')
+        self.model_eep_b1_GBM = joblib.load('my_models/models/LightGBM/Equipment_Electric_Power_model_b1_hyper.h5')
+        self.model_eep_b2_GBM = joblib.load('my_models/models/LightGBM/Equipment_Electric_Power_model_b2_hyper.h5')
+        self.model_eep_b3_GBM = joblib.load('my_models/models/LightGBM/Equipment_Electric_Power_model_b3_hyper.h5')
         
         self.eep_model_list_GBM = [self.model_eep_b1_GBM,self.model_eep_b2_GBM,self.model_eep_b3_GBM]
         
         
-        self.model_cl_b1_GBM  = joblib.load('my_models/models/LightGBM/cooling_demand_model_b1.h5')
-        self.model_cl_b2_GBM  = joblib.load('my_models/models/LightGBM/cooling_demand_model_b2.h5')
-        self.model_cl_b3_GBM  = joblib.load('my_models/models/LightGBM/cooling_demand_model_b3.h5')
+        self.model_cl_b1_GBM  = joblib.load('my_models/models/LightGBM/cooling_demand_model_b1_hyper.h5')
+        self.model_cl_b2_GBM  = joblib.load('my_models/models/LightGBM/cooling_demand_model_b2_hyper.h5')
+        self.model_cl_b3_GBM  = joblib.load('my_models/models/LightGBM/cooling_demand_model_b3_hyper.h5')
         
         self.cl_model_list_GBM = [self.model_cl_b1_GBM,self.model_cl_b2_GBM,self.model_cl_b3_GBM]
         
