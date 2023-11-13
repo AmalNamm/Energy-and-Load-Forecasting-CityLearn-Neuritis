@@ -15,6 +15,7 @@ use this script for orchestrating the evaluations.
 from my_models.user_model import SubmissionModel
 
 def rmse(prediction, actual):
+    
     """Root Mean Squared error metric."""
     return np.sqrt(np.mean(np.power(prediction-actual, 2)))
 

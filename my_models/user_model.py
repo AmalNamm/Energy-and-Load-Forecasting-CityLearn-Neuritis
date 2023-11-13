@@ -12,4 +12,4 @@ from my_models.example_predictor_fusion2 import ExamplePredictorFusion2
 ###################################################################
 
 
-SubmissionModel = ExamplePredictorLGB
+SubmissionModel = ExamplePredictorFusion2
