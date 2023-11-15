@@ -567,8 +567,6 @@ class ExamplePredictorFusion2(BasePredictorModel):
 
         for lstm,gbm in zip(cl_p_LSTM, cl_p_GBM):
             e_cl.append((lstm + gbm) / 2)
-            
-        print("DHW: " +str(e_dhw[0]))
         
         #----------------------------------------------------------------------------------------------------------
         # Dictionary of the current values
