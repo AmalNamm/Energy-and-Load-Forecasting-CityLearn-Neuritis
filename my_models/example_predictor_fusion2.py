@@ -567,7 +567,7 @@ class ExamplePredictorFusion2(BasePredictorModel):
 
         for lstm,gbm in zip(cl_p_LSTM, cl_p_GBM):
             e_cl.append((lstm + gbm) / 2)
-        
+
         #----------------------------------------------------------------------------------------------------------
         # Dictionary of the current values
         
@@ -609,16 +609,25 @@ class ExamplePredictorFusion2(BasePredictorModel):
                     for load_type in ['Equipment_Eletric_Power','DHW_Heating','Cooling_Load']:
                     
                         if load_type == 'Equipment_Eletric_Power':
-                            predictions_dict[b_name][load_type] = e_eep[i]
+                            tmp_eep = e_eep[i][0]
+                            predictions_dict[b_name][load_type] = tmp_eep
+                            print("EEP - Full" + str(tmp_eep))
                             
                         if load_type == 'DHW_Heating':
-                            predictions_dict[b_name][load_type] = e_dhw[i]
-                            
+                            tmp_dhw = e_dhw[i][0]
+                            predictions_dict[b_name][load_type] = tmp_dhw
+                            print("DHW - Full: "+str(tmp_dhw))
+
+                
                         if load_type == 'Cooling_Load':
-                            predictions_dict[b_name][load_type] = e_cl[i]            
+                            tmp_cl = e_cl[i][0]
+                            predictions_dict[b_name][load_type] = tmp_cl
+                            print("CL - Full: "+str(tmp_cl))
                             
                 predictions_dict['Solar_Generation'] = sg_p_GBM
+                print("SG Full: "+str(sg_p_GBM))
                 predictions_dict['Carbon_Intensity'] = cip_p_GBM
+                print("CI Full: "+str(cip_p_GBM))
 
                 
         self.feature_counter = self.feature_counter + 1

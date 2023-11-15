@@ -17,6 +17,7 @@ from my_models.user_model import SubmissionModel
 def rmse(prediction, actual):
     
     """Root Mean Squared error metric."""
+    print("actual: " + str(len(actual)))
     return np.sqrt(np.mean(np.power(prediction-actual, 2)))
 
 class WrapperEnv:
